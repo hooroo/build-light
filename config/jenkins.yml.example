@@ -1,0 +1,3 @@
+username: 'user'
+api_token: 'token'
+jenkins_url: 'http://hostname:port/'
