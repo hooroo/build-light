@@ -33,7 +33,7 @@ class Jenkins
   end
 
   def last_build_number(job_name)
-    job_details(job_name)['builds'].first['number']
+    job_details(job_name)['lastCompletedBuild']['number']
   end
 
   def build_details(job_name, build_number)
