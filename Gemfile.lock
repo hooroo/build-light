@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Jetstar/blinky.git
-  revision: 81d9ee69c25faca3d35c849645c17744f91240a7
+  revision: 277ad0e1d202253fab64c064d388e90fe961bd4e
   specs:
     blinky (0.0.3)
       ruby-usb (>= 0.2.1)

@@ -26,7 +26,5 @@ rescue StandardError => e
   puts 'light: off'
   light.off!
   raise e
-ensure
-  light.close
 end
 
