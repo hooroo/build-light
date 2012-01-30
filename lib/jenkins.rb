@@ -5,7 +5,7 @@ require 'open-uri'
 require './lib/build_status'
 
 class Jenkins
-  API_SUFFIX = '/api/json?token=TOKEN'
+  API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,actions[claimed]]]'
   CLAIM_ACTION_INDEX = 6
 
   def initialize(config)
@@ -14,34 +14,20 @@ class Jenkins
     @api_token = config['api_token']
   end
 
-  def job_list
-    jobs = api_request(@url)['jobs']
-    jobs.collect { |job| job['name'] }
+  def jobs
+    @jobs ||= api_request(@url)['jobs']
   end
 
   def job_statuses
     job_statuses = {}
-    job_list.each do |job_name|
-      build_number = last_build_number(job_name)
-      job_statuses[job_name] = build_status(job_name, build_number)
+    jobs.each do |job|
+      job_statuses[job['name']] = build_status(job)
     end
     job_statuses
   end
 
-  def job_details(job_name)
-    api_request("#{@url}/job/#{URI::encode(job_name)}")
-  end
-
-  def last_build_number(job_name)
-    job_details(job_name)['lastCompletedBuild']['number']
-  end
-
-  def build_details(job_name, build_number)
-    api_request("#{@url}/job/#{URI::encode(job_name)}/#{build_number}")
-  end
-
-  def build_status(job_name, build_number)
-    build_details_json = build_details(job_name, build_number)
+  def build_status(job)
+    build_details_json = job['lastCompletedBuild']
     BuildStatus.new(build_result(build_details_json), build_claimed?(build_details_json))
   end
 
