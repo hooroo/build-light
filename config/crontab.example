@@ -1,2 +1,2 @@
-*/2 * * * * /Users/warner/work/build-light/bin/build-light > /Users/warner/work/build-light/log/build-light.log 2>&1
+*/2 * * * * /home/dev/work/build-light/bin/build-light >> /home/dev/work/build-light/log/build-light.log 2>&1
 
