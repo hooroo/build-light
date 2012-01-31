@@ -6,7 +6,6 @@ require './lib/build_status'
 
 class Jenkins
   API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,actions[claimed]]]'
-  CLAIM_ACTION_INDEX = 6
 
   def initialize(config)
     @url = config['jenkins_url']
@@ -62,8 +61,8 @@ class Jenkins
   end
 
   def build_claimed?(build_details_json)
-    claim_details = build_details_json['actions'][CLAIM_ACTION_INDEX]
-    claimed = claim_details['claimed'] if claim_details
+    post_build_actions = build_details_json['actions']
+    claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
     claimed = false if claimed.nil?
     claimed
   end
