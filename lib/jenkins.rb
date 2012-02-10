@@ -5,7 +5,7 @@ require 'open-uri'
 require './lib/build_status'
 
 class Jenkins
-  API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,actions[claimed]]]'
+  API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,actions[claimed],culprits[fullName]]]'
 
   def initialize(config)
     @url = config['jenkins_url']
@@ -26,12 +26,15 @@ class Jenkins
   end
 
   def build_status(job)
-    build_details_json = job['lastCompletedBuild']
-    BuildStatus.new(build_result(build_details_json), build_claimed?(build_details_json))
+    BuildStatus.new(job['lastCompletedBuild'])
+  end
+
+  def successful_builds
+    job_statuses.select {|job_name, build_status| build_status.success? }
   end
 
   def failed_builds
-    job_statuses.delete_if {|job_name, build_status| !build_status.failure? }
+    job_statuses.select {|job_name, build_status| build_status.failure? }
   end
 
   def has_no_build_failures?
@@ -55,17 +58,6 @@ class Jenkins
   end
 
   private
-
-  def build_result(build_details_json)
-    build_details_json['result']
-  end
-
-  def build_claimed?(build_details_json)
-    post_build_actions = build_details_json['actions']
-    claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
-    claimed = false if claimed.nil?
-    claimed
-  end
 
   def api_request(url)
     api_url = "#{url}/#{API_SUFFIX}"

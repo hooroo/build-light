@@ -34,6 +34,19 @@ begin
     #Play sound effect on first occurence
     puts "Playing failure sound effect"
     `mpg123 ./sounds/nooo.mp3`
+
+    failed_builds = jenkins.failed_builds
+    speech_params = "espeak -v en -s 120 -a 1200"
+
+    failed_builds.each do |failed_build_name, failed_build|
+      `#{speech_params} "Build #{failed_build_name.gsub('-', ' ')} Has Failed." && sleep 2`
+      if failed_build.culprits.size > 0
+        `#{speech_params} "Committers to Fix Build." && sleep 1`
+        `#{speech_params} "#{failed_build.culprits.join(', ')}"`
+      end
+      `sleep 3`
+    end
+
   end
 
   #Setting last_status

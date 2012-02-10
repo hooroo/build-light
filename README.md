@@ -28,6 +28,8 @@ sudo apt-get update
 sudo apt-get install mpg123
 ```
 
+Install 'gespeaker' (from Packages GUI)
+
 Make sure the user is a member of the {{adm}} group
 
 create file {{/etc/udev/rules.d/45-xaiox.rules}}
