@@ -7,6 +7,12 @@ brew install libusb-compat
 ARCHFLAGS="-arch x86_64" bundle install
 ```
 
+Sound effects:
+```
+brew install mpg123
+```
+
+
 Add to launch agent:
 
 ```
@@ -15,6 +21,12 @@ TODO
 
 
 ### Ubuntu
+
+Install sounds:
+```
+sudo apt-get update
+sudo apt-get install mpg123
+```
 
 Make sure the user is a member of the {{adm}} group
 

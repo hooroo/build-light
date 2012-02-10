@@ -1,3 +1,4 @@
+
 require 'blinky'
 require 'yaml'
 require './lib/jenkins'
@@ -21,6 +22,9 @@ begin
   else
     puts 'light: failure'
     light.failure!
+    #Send sound effects
+    puts "Playing failure sound effect"
+    `mpg123 ./sounds/nooo.mp3`
   end
 rescue StandardError => e
   puts 'light: off'
