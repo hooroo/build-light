@@ -17,7 +17,7 @@ begin
                   'success'
                 when jenkins.has_no_unclaimed_builds?
                   'warning'
-                when else
+                else
                   'failure'
                end
 
