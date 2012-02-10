@@ -33,10 +33,11 @@ begin
   if job_result == 'failure' && last_status != 'failure'
     #Play sound effect on first occurence
     puts "Playing failure sound effect"
-    `mpg123 ./sounds/nooo.mp3`
+    mp3_sound_file = File.expand_path("../../sounds/nooo.mp3", __FILE__)
+    `mpg123 #{mp3_sound_file}`
 
     failed_builds = jenkins.failed_builds
-    speech_params = "espeak -v en -s 120 -a 1200"
+    speech_params = "espeak -v en -s 125 -a 1300"
 
     failed_builds.each do |failed_build_name, failed_build|
       `#{speech_params} "Build #{failed_build_name.gsub('-', ' ')} Has Failed." && sleep 2`
