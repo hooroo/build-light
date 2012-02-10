@@ -21,7 +21,6 @@ begin
                   'failure'
                end
 
-
   status_file = File.open(last_status_file_location, 'a+')
   last_status = status_file.readlines.first
   status_file.close
