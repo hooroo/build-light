@@ -31,11 +31,17 @@ begin
   light.__send__("#{job_result}!")
 
   if job_result == 'failure' && last_status != 'failure'
-    #Play sound effect on first occurence
+
+    #Play sound effect on first occurence (randomly chosen from sounds directory)
     puts "Playing failure sound effect"
-    mp3_sound_file = File.expand_path("../../sounds/nooo.mp3", __FILE__)
+
+    mp3_directory = File.expand_path('../../sounds/', __FILE__)
+    sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
+
+    mp3_sound_file = sound_clips.sample
     `mpg123 #{mp3_sound_file}`
 
+    #Say out loud to committers that have failed the build
     failed_builds = jenkins.failed_builds
     speech_params = "espeak -v en -s 125 -a 1300"
 
