@@ -4,6 +4,57 @@ require './lib/jenkins'
 
 light = Blinky.new.light
 
+def find_mp3(directory, command)
+  mp3_file = "#{command.to_s.gsub(' ', '_')}.mp3"
+  file_path = File.join(directory, mp3_file)
+  File.exists?(file_path) ? file_path : nil
+end
+
+def announcement_mp3(command)
+  announcements_directory = File.expand_path('../../sounds/announcements/', __FILE__)
+  find_mp3(announcements_directory, command)
+end
+
+def job_mp3(command)
+  directory = File.expand_path('../../sounds/announcements/jobs/', __FILE__)
+  find_mp3(announcements_directory, command)
+end
+
+def committer_mp3(command)
+  directory = File.expand_path('../../sounds/announcements/committers', __FILE__)
+  find_mp3(announcements_directory, command)
+end
+
+def make_announcements(commands = [])
+  return if commands.blank?
+
+  #Play recorded MP3s from Mac OSX
+  `mpg123 #{commands.collect{|cmd| "'#{command}'" }.join(' ')}'`
+end
+
+def make_fallback_announcement(announcement)
+  #Old school Espeak (Sounds bad)
+  speech_params = "espeak -v en -s 125 -a 1300"
+  `#{speech_params} '#{announcement}'`
+end
+
+def play_mp3_commands(commands = [])
+  collected_commands = []
+  commands.each_with_index do |file_location, index|
+    if file_location
+      #Mp3 file found keep going!
+      collected_commands << file_location
+    else
+      #Missing MP3 file, play whatever can be done in one command, then fire to espeak
+      make_announcements(collected_commands)
+      make_fallback_announcement(commands[index])
+
+      collected_commands = []
+    end
+  end
+  make_announcements(collected_commands)
+end
+
 begin
   last_status_file_location = "./config/last_status"
   jenkins_config_file = './config/jenkins.yml'
@@ -31,25 +82,24 @@ begin
   light.__send__("#{job_result}!")
 
   if job_result == 'failure' && last_status != 'failure'
-
     #Play sound effect on first occurence (randomly chosen from sounds directory)
     puts "Playing failure sound effect"
 
-    mp3_directory = File.expand_path('../../sounds/', __FILE__)
+    mp3_directory = File.expand_path('../../sounds/build_fails/', __FILE__)
     sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
 
-    mp3_sound_file = sound_clips.sample
-    `mpg123 #{mp3_sound_file}`
+    make_announcements( [ sound_clips.sample ] )
 
     #Say out loud to committers that have failed the build
     failed_builds = jenkins.failed_builds
-    speech_params = "espeak -v en -s 125 -a 1300"
 
     failed_builds.each do |failed_build_name, failed_build|
-      `#{speech_params} "Build #{failed_build_name.gsub('-', ' ')} Has Failed." && sleep 2`
+      play_mp3_commands(announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' '), announcement_mp3('Has Failed'))
+
       if failed_build.culprits.size > 0
-        `#{speech_params} "Committers to Fix Build." && sleep 1`
-        `#{speech_params} "#{failed_build.culprits.join(', ')}"`
+        play_mp3_commands(announcement_mp3('Committers to Fix Build'))
+
+        play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
       end
       `sleep 3`
     end
