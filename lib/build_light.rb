@@ -10,26 +10,27 @@ def find_mp3(directory, command)
   File.exists?(file_path) ? file_path : nil
 end
 
+
 def announcement_mp3(command)
-  announcements_directory = File.expand_path('../../sounds/announcements/', __FILE__)
-  find_mp3(announcements_directory, command)
+  directory = File.expand_path('../../sounds/announcements/', __FILE__)
+  find_mp3(directory, command)
 end
 
 def job_mp3(command)
   directory = File.expand_path('../../sounds/announcements/jobs/', __FILE__)
-  find_mp3(announcements_directory, command)
+  find_mp3(directory, command)
 end
 
 def committer_mp3(command)
   directory = File.expand_path('../../sounds/announcements/committers', __FILE__)
-  find_mp3(announcements_directory, command)
+  find_mp3(directory, command)
 end
 
 def make_announcements(commands = [])
-  return if commands.blank?
+  return unless commands.size > 0
 
   #Play recorded MP3s from Mac OSX
-  `mpg123 #{commands.collect{|cmd| "'#{command}'" }.join(' ')}'`
+  `mpg123 #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}`
 end
 
 def make_fallback_announcement(announcement)
@@ -94,10 +95,10 @@ begin
     failed_builds = jenkins.failed_builds
 
     failed_builds.each do |failed_build_name, failed_build|
-      play_mp3_commands(announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Has Failed'))
+      play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Has Failed')])
 
       if failed_build.culprits.size > 0
-        play_mp3_commands(announcement_mp3('Committers to Fix Build'))
+        play_mp3_commands([announcement_mp3('Committers to Fix Build')])
 
         play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
       end
