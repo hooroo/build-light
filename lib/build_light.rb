@@ -94,7 +94,7 @@ begin
     failed_builds = jenkins.failed_builds
 
     failed_builds.each do |failed_build_name, failed_build|
-      play_mp3_commands(announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' '), announcement_mp3('Has Failed'))
+      play_mp3_commands(announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Has Failed'))
 
       if failed_build.culprits.size > 0
         play_mp3_commands(announcement_mp3('Committers to Fix Build'))
