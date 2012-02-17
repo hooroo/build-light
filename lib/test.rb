@@ -83,9 +83,11 @@ begin
     make_announcements( [ sound_clips.sample ] )
 
     #Say out loud to committers that have failed the build
-    #failed_builds = jenkins.failed_builds
+    failed_builds = jenkins.failed_builds
 
-    failed_builds = ['deploy to shrubbery']
+    #failed_builds = ['deploy to shrubbery']
+
+    puts failed_builds.inspect
 
     failed_builds.each do |failed_build_name, failed_build|
       play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Has Failed')])
@@ -93,9 +95,10 @@ begin
       #if failed_build.culprits.size > 0
         play_mp3_commands([announcement_mp3('Committers to Fix Build')])
 
+        puts failed_build.culprits.inspect
         #failed_build.culprits
-        culprits = ['James Dunwoody', 'James Fraser', 'Tom']
-        play_mp3_commands(culprits.inject([]) {|result, element| result << committer_mp3(element) })
+        #culprits = ['James Dunwoody', 'James Fraser', 'Tom']
+        play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
       #end
       `sleep 3`
     end

@@ -9,11 +9,10 @@
 #
 
 #ruby ./lib/generate_sound_files.rb
-
 require 'yaml'
 require './lib/jenkins'
-STDERR.puts "THIS IS JUST A GENERATOR FOR MAC WITH SEMI DECENT VOICES"
 
+STDERR.puts "THIS IS JUST A GENERATOR FOR MAC WITH SEMI DECENT VOICES"
 
 jenkins_config_file = './config/jenkins.yml'
 config = YAML::load(File.open(jenkins_config_file))
