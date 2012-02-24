@@ -105,7 +105,8 @@ begin
       play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
 
       if failed_build.culprits.size > 0
-        play_mp3_commands([announcement_mp3('Committers'), announcement_mp3('drumroll')])
+        pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
+        play_mp3_commands([announcement_mp3(pluralised), announcement_mp3('drumroll')])
 
         play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
       end
