@@ -44,8 +44,9 @@ authors.each do |author_name|
   `#{cmd}`
 end
 
+numbers = (1..25).to_a.collect(&:to_s)
 #Create surrounding announcements
-["Build", "Failed", "Committers", "Committer"].each do |command_string|
+(["Build", "Failed", "Committers", "Committer"] + numbers).each do |command_string|
   mp3_file_target_path = File.join(announcements_directory, "#{command_string.to_s.gsub(' ', '_')}.mp3")
   cmd = "#{say_command} '#{command_string}' && lame /tmp/temp.aiff #{mp3_file_target_path}"
   puts cmd
