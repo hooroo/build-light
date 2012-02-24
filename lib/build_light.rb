@@ -30,19 +30,26 @@ def make_announcements(commands = [])
   return unless commands.size > 0
 
   #Play recorded MP3s from Mac OSX
-  `mpg123 #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}`
+  cmd = "mpg123 #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+  puts "RUNNING COMMAND : #{cmd}"
+  `#{cmd}`
 end
 
 def make_fallback_announcement(announcement)
+  return unless announcement && announcement != ''
+
   #Old school Espeak (Sounds bad)
   speech_params = "espeak -v en -s 125 -a 1300"
-  `#{speech_params} '#{announcement}'`
+
+  cmd = "#{speech_params} '#{announcement}'"
+  puts "RUNNING COMMAND : #{cmd}"
+  `#{cmd}`
 end
 
 def play_mp3_commands(commands = [])
   collected_commands = []
   commands.each_with_index do |file_location, index|
-    if file_location
+    if file_location && File.exists?(file_location)
       #Mp3 file found keep going!
       collected_commands << file_location
     else
@@ -98,8 +105,7 @@ begin
       play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
 
       if failed_build.culprits.size > 0
-        play_mp3_commands([announcement_mp3('Committers')])
-        play_mp3_commands([announcement_mp3('drumroll')])
+        play_mp3_commands([announcement_mp3('Committers'), announcement_mp3('drumroll')])
 
         play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
       end
