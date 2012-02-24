@@ -87,36 +87,45 @@ begin
   puts "Last status : #{last_status}"
   puts "Setting light : #{job_result}"
 
-  light.__send__("#{job_result}!")
+  #Status has changed
+  unless last_status == job_result
+    puts "Updating..."
 
-  if job_result == 'failure' && last_status != 'failure'
-    #Play sound effect on first occurence (randomly chosen from sounds directory)
-    puts "Playing failure sound effect"
+    #Set USB Light
+    light.__send__("#{job_result}!")
 
-    mp3_directory = File.expand_path('../../sounds/build_fails/', __FILE__)
-    sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
+    #Setting last_status
+    File.open(last_status_file_location, 'w') {|f| f.write(job_result) }
 
-    make_announcements( [ sound_clips.sample ] )
+    if job_result == 'failure'
+      #Play sound effect on first occurence (randomly chosen from sounds directory)
+      puts "Playing failure sound effect"
 
-    #Say out loud to committers that have failed the build
-    failed_builds = jenkins.failed_builds
+      mp3_directory = File.expand_path('../../sounds/build_fails/', __FILE__)
+      sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
 
-    failed_builds.each do |failed_build_name, failed_build|
-      play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
+      make_announcements( [ sound_clips.sample ] )
 
-      if failed_build.culprits.size > 0
-        pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
-        play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
+      #Say out loud to committers that have failed the build
+      failed_builds = jenkins.failed_builds
 
-        play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
+      failed_builds.each do |failed_build_name, failed_build|
+        play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
+
+        if failed_build.culprits.size > 0
+          pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
+          play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
+
+          play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
+        end
+        `sleep 2`
       end
-      `sleep 2`
-    end
 
+    end
   end
 
-  #Setting last_status
-  File.open(last_status_file_location, 'w') {|f| f.write(job_result) } unless last_status == job_result
+
+
 rescue StandardError => e
   puts 'Setting light :off'
   light.off!
