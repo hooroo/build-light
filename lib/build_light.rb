@@ -10,7 +10,6 @@ def find_mp3(directory, command)
   File.exists?(file_path) ? file_path : nil
 end
 
-
 def announcement_mp3(command)
   directory = File.expand_path('../../sounds/announcements/', __FILE__)
   find_mp3(directory, command)
@@ -124,11 +123,10 @@ begin
     end
   end
 
-
-
 rescue StandardError => e
   puts 'Setting light :off'
   light.off!
+  File.open(last_status_file_location, 'w') {|f| f.write('off') }
   raise e
 end
 
