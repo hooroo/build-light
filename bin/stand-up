@@ -1,0 +1,7 @@
+#! /bin/bash
+bin_dir=`dirname $0`
+home_dir="$bin_dir/.."
+cd $home_dir
+[[ -s "/usr/local/rvm/scripts/rvm" ]] && . "/usr/local/rvm/scripts/rvm" # Load RVM function
+bundle install
+bundle exec ruby ./lib/stand_up.rb

@@ -1,6 +1,8 @@
 #Add to crontab
 #0 9 * * 1,2,3,4,5 ruby lib/stand_up.rb
 
+#Standup song
+#30 9 * * 1,2,3,4,5 /bin/bash -c 'export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH; RBENV_VERSION=1.9.3-p125; ruby /home/dev/build-light/bin/stand-up >> /home/dev/build-light/log/stand-up.log 2>&1'
 def play_tunes(commands = [])
   return unless commands.size > 0
 
