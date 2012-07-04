@@ -44,6 +44,12 @@ Enter the following content in the file:
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664", GROUP="adm"
 ```
 
+Setup USB permissions:
+```
+cd /dev/bus/usb
+sudo find . -exec chown root:adm {} \;
+```
+
 Reboot
 
 ```
