@@ -1,3 +1,5 @@
+require 'ap'
+
 class BuildStatus
   SUCCESS = 'SUCCESS'
   FAILURE = 'FAILURE'
@@ -32,18 +34,21 @@ class BuildStatus
   private
 
   def build_result(build_details_json)
-    build_details_json['result']
+    ap build_details_json
+    ap build_details_json.class
+    build_details_json['result'] unless build_details_json.nil?
   end
 
   def build_claimed?(build_details_json)
-    post_build_actions = build_details_json['actions']
+
+    post_build_actions = build_details_json.nil? ? [] : build_details_json['actions']
     claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
     claimed = false if claimed.nil?
     claimed
   end
 
   def build_culprits(build_details_json)
-    culprits = build_details_json['culprits']
+    culprits = build_details_json.nil? ? [] : build_details_json['culprits']
     culprits = (culprits.collect { |culprit| culprit['fullName'].gsub('.', ' ').strip }).compact.uniq
     culprits
   end
