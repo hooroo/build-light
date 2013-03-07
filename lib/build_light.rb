@@ -5,7 +5,7 @@ require './lib/jenkins'
 light = Blinky.new.light
 
 def find_mp3(directory, command)
-  mp3_file = "#{command.to_s.gsub(' ', '_')}.mp3"
+  mp3_file = "#{command.to_s.gsub('[\s\-]', '_')}.mp3"
   file_path = File.join(directory, mp3_file)
   File.exists?(file_path) ? file_path : nil
 end

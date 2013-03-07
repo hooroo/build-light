@@ -1,1 +1,1 @@
-rvm 1.9.2-p290@build-light --create
+rvm ruby-1.9.3-p286-falcon@build-light --create
