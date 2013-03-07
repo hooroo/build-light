@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/Jetstar/blinky.git
+  remote: git://github.com/hooroo/blinky.git
   revision: 277ad0e1d202253fab64c064d388e90fe961bd4e
   specs:
     blinky (0.0.3)
@@ -8,6 +8,7 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    awesome_print (1.1.0)
     json (1.6.5)
     ruby-usb (0.2.1)
 
@@ -15,5 +16,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   blinky!
   json (~> 1.6.5)
