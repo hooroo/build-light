@@ -1,11 +1,12 @@
 require 'blinky'
 require 'yaml'
 require './lib/jenkins'
+require './lib/nil_light'
 
-light = Blinky.new.light
+light = Blinky.new.light rescue NilLight.new
 
 def find_mp3(directory, command)
-  mp3_file = "#{command.to_s.gsub('[\s\-]', '_')}.mp3"
+  mp3_file = "#{command.to_s.gsub(/([\s\-])/, '_')}.mp3"
   file_path = File.join(directory, mp3_file)
   File.exists?(file_path) ? file_path : nil
 end
@@ -129,4 +130,3 @@ rescue StandardError => e
   File.open(last_status_file_location, 'w') {|f| f.write('off') }
   raise e
 end
-
