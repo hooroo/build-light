@@ -1,4 +1,4 @@
-require 'ap'
+require 'awesome_print'
 
 class BuildStatus
   SUCCESS = 'SUCCESS'
