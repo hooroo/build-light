@@ -116,7 +116,7 @@ begin
           pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
           play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
 
-          play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element) })
+          play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3(element.split(/(\W)/).map(&:capitalize).join })
         end
         `sleep 2`
       end
