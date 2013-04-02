@@ -1,7 +1,7 @@
 class NilLight
 
   def initialize
-    ap "No light present. Falling back to NilLight"
+    puts "No light present. Falling back to NilLight"
   end
 
   def off!; end

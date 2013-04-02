@@ -34,8 +34,7 @@ class BuildStatus
   private
 
   def build_result(build_details_json)
-    ap build_details_json
-    ap build_details_json.class
+    ap build_details_json['result']
     build_details_json['result'] unless build_details_json.nil?
   end
 
