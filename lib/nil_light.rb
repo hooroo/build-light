@@ -1,4 +1,9 @@
 class NilLight
+
+  def initialize
+    "No light present. Falling back to NilLight"
+  end
+
   def off!; end
   def failure!; end
   def warning!; end
