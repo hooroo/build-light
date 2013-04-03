@@ -6,10 +6,10 @@ class BuildStatus
   DISABLED = 'DISABLED'
   UNKNOWN = 'UNKNOWN'
 
-  def initialize(jenkins_build_json)
-    @result = build_result(jenkins_build_json)                || UNKNOWN
-    @has_been_claimed = build_claimed?(jenkins_build_json)    || false
-    @culprits = build_culprits(jenkins_build_json)            || []
+  def initialize(job)
+    @result = build_result(job)                                      || UNKNOWN
+    @has_been_claimed = build_claimed?(job['lastCompletedBuild'])    || false
+    @culprits = build_culprits(job['lastCompletedBuild'])            || []
   end
 
 
@@ -33,9 +33,21 @@ class BuildStatus
 
   private
 
-  def build_result(build_details_json)
-    ap build_details_json['result']
-    build_details_json['result'] unless build_details_json.nil?
+  def build_result(job)
+    log_job job
+    job['lastCompletedBuild']['result'] unless job['lastCompletedBuild'].nil?
+  end
+
+  def log_job job
+    unless job.nil?
+      puts "Job name: #{job['name']}"
+      puts "Job started at: #{Time.at(job['lastCompletedBuild']['timestamp']/1000)}"
+      puts "Job duration: #{(job['lastCompletedBuild']['duration']/6000.00).round(2)}"
+      puts "Job status: #{job['lastCompletedBuild']['result']}"
+      puts "="*20
+    else
+      puts "no job info supplied"
+    end
   end
 
   def build_claimed?(build_details_json)

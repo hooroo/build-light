@@ -5,7 +5,7 @@ require 'open-uri'
 require './lib/build_status'
 
 class Jenkins
-  API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,actions[claimed],culprits[fullName]]]'
+  API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,timestamp,duration,actions[claimed],culprits[fullName]]]'
 
   def initialize(config)
     @url = config['jenkins_url']
@@ -26,7 +26,7 @@ class Jenkins
   end
 
   def build_status(job)
-    BuildStatus.new(job['lastCompletedBuild'])
+    BuildStatus.new(job)
   end
 
   def successful_builds
