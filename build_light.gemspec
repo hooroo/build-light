@@ -1,5 +1,8 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/version', __FILE__)
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'build_light/version'
 
 Gem::Specification.new do |gem|
 
@@ -17,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.version       = BuildLight::VERSION
 
   gem.add_dependency "json", "~> 1.6.5"
-  gem.add_dependency "blinky", :git => "git://github.com/hooroo/blinky.git"
+  # gem.add_dependency "blinky", :git => "git://github.com/hooroo/blinky.git"
   gem.add_dependency "logging"
 
   gem.add_development_dependency "rspec", "~> 2.6"
