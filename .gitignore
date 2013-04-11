@@ -17,4 +17,5 @@ test/version_tmp
 tmp
 config/jenkins.yml
 log/*.log
+development.log*
 config/last_status
