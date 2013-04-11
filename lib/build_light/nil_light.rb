@@ -1,7 +1,10 @@
+require './lib/logger'
+
 class NilLight
+  include ::Logger
 
   def initialize
-    puts "No light present. Falling back to NilLight"
+    logger.warn "No light present. Falling back to NilLight"
   end
 
   def off!; end
