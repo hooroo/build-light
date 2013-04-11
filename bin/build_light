@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+result = BuildLight.new
+
+exit(1) unless result
