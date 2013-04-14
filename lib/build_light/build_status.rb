@@ -1,5 +1,4 @@
 require 'awesome_print'
-require './lib/logger'
 
 # module BuildLi
 

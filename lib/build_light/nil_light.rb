@@ -1,5 +1,3 @@
-require './lib/logger'
-
 class NilLight
   include ::Logger
 

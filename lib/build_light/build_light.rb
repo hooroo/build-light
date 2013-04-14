@@ -1,16 +1,97 @@
-require 'blinky'
+# require 'blinky'
 require 'yaml'
-require './lib/jenkins'
-require './lib/nil_light'
-require './lib/logger'
-
-light = Blinky.new.light rescue NilLight.new
-logger = Logging.logger['BuildLight']
-
 
 module BuildLight
 
   class Processor
+
+    attr_reader :light, :logger, :last_status_file
+
+    def initialize
+      @light = Blinky.new.light rescue NilLight.new
+      @logger = Logging.logger['BuildLight']
+      @last_status_file = "./config/last_status"
+
+      update_status
+    end
+
+    def jenkins
+      Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
+    end
+
+    def sound_config
+      YAML::load( File.open('./config/sounds.yml') )
+    end
+
+    def job_result
+      case
+        when jenkins.job_statuses.empty?
+          'off'
+        when jenkins.has_no_build_failures?
+          'success'
+        when jenkins.has_no_unclaimed_builds?
+          'warning'
+        else
+          'failure'
+      end
+    end
+
+
+    def update_status
+
+      begin
+
+        status_file = File.open(last_status_file, 'a+')
+        last_status = status_file.readlines.first
+        status_file.close
+
+        logger.info "Last status: #{last_status}"
+        logger.info "Setting light: #{job_result}"
+
+        #Status has changed
+        unless last_status == job_result
+          puts "Updating..."
+
+          #Set USB Light
+          light.__send__("#{job_result}!")
+
+          #Setting last_status
+          File.open(last_status_file, 'w') {|f| f.write(job_result) }
+
+          if job_result == 'failure'
+            #Play sound effect on first occurence (randomly chosen from sounds directory)
+            puts "Playing failure sound effect"
+
+            mp3_directory = File.expand_path('../../../sounds/build_fails/', __FILE__)
+            sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
+            make_announcements( [ sound_clips.sample ] )
+
+            #Say out loud to committers that have failed the build
+            failed_builds = jenkins.failed_builds
+            failed_builds.each do |failed_build_name, failed_build|
+              binding.pry
+              play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
+
+              if failed_build.culprits.size > 0
+                pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
+                play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
+
+                play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3( element.split(/(\W)/).map(&:capitalize).join ) })
+              end
+              `sleep 2`
+            end
+
+          end
+        end
+
+      rescue StandardError => e
+        puts 'Setting light :off'
+        light.off!
+        File.open(last_status_file, 'w') {|f| f.write('off') }
+        raise e
+      end
+
+    end
 
     def sound_directory types
       File.expand_path("../../sounds/#{types.split(',')}/", __FILE__)
@@ -23,17 +104,17 @@ module BuildLight
     end
 
     def announcement_mp3(command)
-      directory = File.expand_path('../../sounds/announcements/', __FILE__)
+      directory = File.expand_path('../../../sounds/announcements/', __FILE__)
       find_mp3(directory, command)
     end
 
     def job_mp3(command)
-      directory = File.expand_path('../../sounds/announcements/jobs/', __FILE__)
+      directory = File.expand_path('../../../sounds/announcements/jobs/', __FILE__)
       find_mp3(directory, command)
     end
 
     def committer_mp3(command)
-      directory = File.expand_path('../../sounds/announcements/committers', __FILE__)
+      directory = File.expand_path('../../../sounds/announcements/committers', __FILE__)
       find_mp3(directory, command)
     end
 
@@ -41,8 +122,8 @@ module BuildLight
       return unless commands.size > 0
 
       #Play recorded MP3s from Mac OSX
-      cmd = "mpg123 #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
-      puts "RUNNING COMMAND : #{cmd}"
+      cmd = "#{sound_config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+      logger.info "Running Command: #{cmd}"
       `#{cmd}`
     end
 
@@ -53,7 +134,7 @@ module BuildLight
       speech_params = "espeak -v en -s 125 -a 1300"
 
       cmd = "#{speech_params} '#{announcement}'"
-      puts "RUNNING COMMAND : #{cmd}"
+      logger.info "RUNNING COMMAND : #{cmd}"
       `#{cmd}`
     end
 
@@ -72,78 +153,6 @@ module BuildLight
         end
       end
       make_announcements(collected_commands)
-    end
-
-    def initialize
-
-      begin
-        last_status_file_location = "./config/last_status"
-        jenkins_config_file = './config/jenkins.yml'
-        config = YAML::load(File.open(jenkins_config_file))
-        jenkins = Jenkins.new(config)
-
-        job_result = case
-                      when jenkins.job_statuses.empty?
-                        'off'
-                      when jenkins.has_no_build_failures?
-                        'success'
-                      when jenkins.has_no_unclaimed_builds?
-                        'warning'
-                      else
-                        'failure'
-                     end
-
-        status_file = File.open(last_status_file_location, 'a+')
-        last_status = status_file.readlines.first
-        status_file.close
-
-        logger.info "Last status: #{last_status}"
-        logger.info "Setting light: #{job_result}"
-
-        #Status has changed
-        unless last_status == job_result
-          puts "Updating..."
-
-          #Set USB Light
-          light.__send__("#{job_result}!")
-
-          #Setting last_status
-          File.open(last_status_file_location, 'w') {|f| f.write(job_result) }
-
-          if job_result == 'failure'
-            #Play sound effect on first occurence (randomly chosen from sounds directory)
-            puts "Playing failure sound effect"
-
-            mp3_directory = File.expand_path('../../sounds/build_fails/', __FILE__)
-            sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
-
-            make_announcements( [ sound_clips.sample ] )
-
-            #Say out loud to committers that have failed the build
-            failed_builds = jenkins.failed_builds
-
-            failed_builds.each do |failed_build_name, failed_build|
-              play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
-
-              if failed_build.culprits.size > 0
-                pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
-                play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
-
-                play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3( element.split(/(\W)/).map(&:capitalize).join ) })
-              end
-              `sleep 2`
-            end
-
-          end
-        end
-
-      rescue StandardError => e
-        puts 'Setting light :off'
-        light.off!
-        File.open(last_status_file_location, 'w') {|f| f.write('off') }
-        raise e
-      end
-
     end
 
   end

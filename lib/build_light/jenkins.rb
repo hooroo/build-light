@@ -2,7 +2,6 @@ require 'rubygems'
 require 'net/http'
 require 'json'
 require 'open-uri'
-require './lib/build_status'
 
 class Jenkins
   API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,lastCompletedBuild[result,timestamp,duration,actions[claimed],culprits[fullName]]]'
@@ -60,17 +59,18 @@ class Jenkins
   private
 
   def api_request(url)
-    api_url = "#{url}/#{API_SUFFIX}"
-    uri = URI(api_url)
+    # api_url = "#{url}/#{API_SUFFIX}"
+    # uri = URI(api_url)
 
-    req = Net::HTTP::Get.new(uri.request_uri)
-    req.basic_auth @username, @api_token if @username && @api_token
+    # req = Net::HTTP::Get.new(uri.request_uri)
+    # req.basic_auth @username, @api_token if @username && @api_token
 
-    res = Net::HTTP.start(uri.host, uri.port) do |http|
-      http.request(req)
-    end
+    # res = Net::HTTP.start(uri.host, uri.port) do |http|
+    #   http.request(req)
+    # end
 
-    JSON.parse(res.body)
+    # JSON.parse(res.body)
+    JSON.parse(File.open('/Users/daniel/Desktop/jenkins2.json', 'r').readlines.first)
   end
 
 end

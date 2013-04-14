@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 require 'pry'
-binding.pry
-
 
 require 'build_light'
 
-result = BuildLight::Processor.new
+result = BuildLight::Processor.new()
 
 exit(1) unless result
