@@ -49,6 +49,34 @@ module BuildLight
       light.__send__("#{status}!")
     end
 
+    def failed_builds
+      @failed_builds ||= jenkins.failed_builds
+    end
+
+    def announce_failure
+      failed_builds.each do |failed_build_name, failed_build|
+
+        SoundPlayer.play_mp3_commands([
+          SoundPlayer.get_mp3('announcements', 'build'),
+          SoundPlayer.get_mp3('jobs', failed_build_name.gsub('-', ' ') ),
+          SoundPlayer.get_mp3('announcements', 'failed')
+        ])
+
+        if failed_build.culprits.size > 0
+          pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
+          SoundPlayer.play_mp3_commands([
+            SoundPlayer.get_mp3('numbers', failed_build.culprits.size),
+            SoundPlayer.get_mp3('announcements', pluralised),
+            SoundPlayer.get_mp3('announcements', 'drumroll')
+          ])
+
+          SoundPlayer.play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer.get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
+        end
+
+        `sleep 2`
+      end
+    end
+
 
     def update_status
 
@@ -70,31 +98,10 @@ module BuildLight
 
             mp3_directory = File.expand_path('../../../sounds/build_fails/', __FILE__)
             sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
-            SoundPlayer::make_announcements( [ sound_clips.sample ] )
+            SoundPlayer.make_announcements( [ sound_clips.sample ] )
 
-            #Say out loud to committers that have failed the build
-            failed_builds = jenkins.failed_builds
+            announce_failure
 
-            failed_builds.each do |failed_build_name, failed_build|
-
-              SoundPlayer::play_mp3_commands([
-                SoundPlayer::get_mp3('announcements', 'build'),
-                SoundPlayer::get_mp3('jobs', failed_build_name.gsub('-', ' ') ),
-                SoundPlayer::get_mp3('announcements', 'failed')
-              ])
-
-              if failed_build.culprits.size > 0
-                pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
-                SoundPlayer::play_mp3_commands([
-                  SoundPlayer::get_mp3('numbers', failed_build.culprits.size),
-                  SoundPlayer::get_mp3('announcements', pluralised),
-                  SoundPlayer::get_mp3('announcements', 'drumroll')
-                ])
-
-                SoundPlayer::play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer::get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
-              end
-              `sleep 2`
-            end
 
           end
         end
