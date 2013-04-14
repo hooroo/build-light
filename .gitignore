@@ -16,7 +16,7 @@ test/tmp
 test/version_tmp
 tmp
 config/jenkins.yml
-config/sounds.yml
+config/build_light.yml
 log/*.log
 development.log*
 config/last_status

@@ -5,13 +5,11 @@ module BuildLight
 
   class Processor
 
-    attr_reader :light, :logger, :last_status_file
+    attr_reader :light, :logger, :last_status
 
     def initialize
       @light = Blinky.new.light rescue NilLight.new
       @logger = Logging.logger['BuildLight']
-      @last_status_file = "./config/last_status"
-
       update_status
     end
 
@@ -19,21 +17,36 @@ module BuildLight
       Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
     end
 
-    def sound_config
-      YAML::load( File.open('./config/sounds.yml') )
+    def config
+      @config ||= YAML::load( File.open('./config/build_light.yml') )
     end
 
     def job_result
-      case
-        when jenkins.job_statuses.empty?
-          'off'
-        when jenkins.has_no_build_failures?
-          'success'
-        when jenkins.has_no_unclaimed_builds?
-          'warning'
-        else
-          'failure'
-      end
+      @job_result ||=
+        case
+          when jenkins.job_statuses.empty?
+            'off'
+          when jenkins.has_no_build_failures?
+            'success'
+          when jenkins.has_no_unclaimed_builds?
+            'warning'
+          else
+            'failure'
+        end
+    end
+
+    def last_status
+      @last_status ||= File.open(config['status_file'], 'a+').readlines.first
+    end
+
+    def set_status status
+      logger.info "Setting Status: #{status}"
+      File.open(config['status_file'], 'w') { |f| f.write( status ) }
+    end
+
+    def set_light status
+      logger.info "Setting light: #{status}"
+      light.__send__("#{status}!")
     end
 
 
@@ -41,26 +54,19 @@ module BuildLight
 
       begin
 
-        status_file = File.open(last_status_file, 'a+')
-        last_status = status_file.readlines.first
-        status_file.close
-
         logger.info "Last status: #{last_status}"
-        logger.info "Setting light: #{job_result}"
 
         #Status has changed
         unless last_status == job_result
-          puts "Updating..."
+          logger.info "Updating..."
 
-          #Set USB Light
-          light.__send__("#{job_result}!")
-
-          #Setting last_status
-          File.open(last_status_file, 'w') {|f| f.write(job_result) }
+          #Set USB Light and local status
+          set_light job_result
+          set_status job_result
 
           if job_result == 'failure'
             #Play sound effect on first occurence (randomly chosen from sounds directory)
-            puts "Playing failure sound effect"
+            logger.info "Playing failure sound effect"
 
             mp3_directory = File.expand_path('../../../sounds/build_fails/', __FILE__)
             sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
@@ -68,12 +74,11 @@ module BuildLight
 
             #Say out loud to committers that have failed the build
             failed_builds = jenkins.failed_builds
-            failed_builds.each do |failed_build_name, failed_build|
-              binding.pry
-              play_mp3_commands([announcement_mp3('Build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('Failed')])
 
+            failed_builds.each do |failed_build_name, failed_build|
+              play_mp3_commands([announcement_mp3('build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('failed')])
               if failed_build.culprits.size > 0
-                pluralised = failed_build.culprits.size == 1 ? 'Committer' : "Committers"
+                pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
                 play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
 
                 play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3( element.split(/(\W)/).map(&:capitalize).join ) })
@@ -87,7 +92,7 @@ module BuildLight
       rescue StandardError => e
         puts 'Setting light :off'
         light.off!
-        File.open(last_status_file, 'w') {|f| f.write('off') }
+        set_status 'off'
         raise e
       end
 
@@ -122,7 +127,7 @@ module BuildLight
       return unless commands.size > 0
 
       #Play recorded MP3s from Mac OSX
-      cmd = "#{sound_config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+      cmd = "#{config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
       logger.info "Running Command: #{cmd}"
       `#{cmd}`
     end
