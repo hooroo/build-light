@@ -79,7 +79,7 @@ module BuildLight
               play_mp3_commands([announcement_mp3('build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('failed')])
               if failed_build.culprits.size > 0
                 pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
-                play_mp3_commands([announcement_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
+                play_mp3_commands([number_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
 
                 play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3( element.split(/(\W)/).map(&:capitalize).join ) })
               end
@@ -98,8 +98,8 @@ module BuildLight
 
     end
 
-    def sound_directory types
-      File.expand_path("../../sounds/#{types.split(',')}/", __FILE__)
+    def sound_directory type
+      File.expand_path("../../../sounds/#{type}/", __FILE__)
     end
 
     def find_mp3(directory, command)
@@ -109,17 +109,21 @@ module BuildLight
     end
 
     def announcement_mp3(command)
-      directory = File.expand_path('../../../sounds/announcements/', __FILE__)
-      find_mp3(directory, command)
+      find_mp3(sound_directory('announcements'), command)
     end
 
     def job_mp3(command)
-      directory = File.expand_path('../../../sounds/announcements/jobs/', __FILE__)
+      directory = File.expand_path('../../../sounds/jobs/', __FILE__)
+      find_mp3(directory, command)
+    end
+
+    def number_mp3(command)
+      directory = File.expand_path('../../../sounds/numbers/', __FILE__)
       find_mp3(directory, command)
     end
 
     def committer_mp3(command)
-      directory = File.expand_path('../../../sounds/announcements/committers', __FILE__)
+      directory = File.expand_path('../../../sounds/committers', __FILE__)
       find_mp3(directory, command)
     end
 
