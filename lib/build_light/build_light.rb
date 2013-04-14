@@ -70,18 +70,28 @@ module BuildLight
 
             mp3_directory = File.expand_path('../../../sounds/build_fails/', __FILE__)
             sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
-            make_announcements( [ sound_clips.sample ] )
+            SoundPlayer::make_announcements( [ sound_clips.sample ] )
 
             #Say out loud to committers that have failed the build
             failed_builds = jenkins.failed_builds
 
             failed_builds.each do |failed_build_name, failed_build|
-              play_mp3_commands([announcement_mp3('build'), job_mp3(failed_build_name.gsub('-', ' ')), announcement_mp3('failed')])
+
+              SoundPlayer::play_mp3_commands([
+                SoundPlayer::get_mp3('announcements', 'build'),
+                SoundPlayer::get_mp3('jobs', failed_build_name.gsub('-', ' ') ),
+                SoundPlayer::get_mp3('announcements', 'failed')
+              ])
+
               if failed_build.culprits.size > 0
                 pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
-                play_mp3_commands([number_mp3(failed_build.culprits.size), announcement_mp3(pluralised), announcement_mp3('drumroll')])
+                SoundPlayer::play_mp3_commands([
+                  SoundPlayer::get_mp3('numbers', failed_build.culprits.size),
+                  SoundPlayer::get_mp3('announcements', pluralised),
+                  SoundPlayer::get_mp3('announcements', 'drumroll')
+                ])
 
-                play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << committer_mp3( element.split(/(\W)/).map(&:capitalize).join ) })
+                SoundPlayer::play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer::get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
               end
               `sleep 2`
             end
@@ -96,72 +106,6 @@ module BuildLight
         raise e
       end
 
-    end
-
-    def sound_directory type
-      File.expand_path("../../../sounds/#{type}/", __FILE__)
-    end
-
-    def find_mp3(directory, command)
-      mp3_file = "#{command.to_s.gsub(/([\s\-])/, '_')}.mp3"
-      file_path = File.join(directory, mp3_file)
-      File.exists?(file_path) ? file_path : nil
-    end
-
-    def announcement_mp3(command)
-      find_mp3(sound_directory('announcements'), command)
-    end
-
-    def job_mp3(command)
-      directory = File.expand_path('../../../sounds/jobs/', __FILE__)
-      find_mp3(directory, command)
-    end
-
-    def number_mp3(command)
-      directory = File.expand_path('../../../sounds/numbers/', __FILE__)
-      find_mp3(directory, command)
-    end
-
-    def committer_mp3(command)
-      directory = File.expand_path('../../../sounds/committers', __FILE__)
-      find_mp3(directory, command)
-    end
-
-    def make_announcements(commands = [])
-      return unless commands.size > 0
-
-      #Play recorded MP3s from Mac OSX
-      cmd = "#{config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
-      logger.info "Running Command: #{cmd}"
-      `#{cmd}`
-    end
-
-    def make_fallback_announcement(announcement)
-      return unless announcement && announcement != ''
-
-      #Old school Espeak (Sounds bad)
-      speech_params = "espeak -v en -s 125 -a 1300"
-
-      cmd = "#{speech_params} '#{announcement}'"
-      logger.info "RUNNING COMMAND : #{cmd}"
-      `#{cmd}`
-    end
-
-    def play_mp3_commands(commands = [])
-      collected_commands = []
-      commands.each_with_index do |file_location, index|
-        if file_location && File.exists?(file_location)
-          #Mp3 file found keep going!
-          collected_commands << file_location
-        else
-          #Missing MP3 file, play whatever can be done in one command, then fire to espeak
-          make_announcements(collected_commands)
-          make_fallback_announcement(commands[index])
-
-          collected_commands = []
-        end
-      end
-      make_announcements(collected_commands)
     end
 
   end
