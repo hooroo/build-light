@@ -26,6 +26,10 @@ module BuildLight
         File.exists?(file_path) ? file_path : nil
       end
 
+      def get_random_mp3 type
+        Dir.glob(File.join(sound_directory(type), '*.mp3')).sample
+      end
+
       def make_announcements(commands = [])
         return unless commands.size > 0
 
@@ -46,7 +50,7 @@ module BuildLight
         `#{cmd}`
       end
 
-      def play_mp3_commands(commands = [])
+      def play(commands = [])
         collected_commands = []
         commands.each_with_index do |file_location, index|
           if file_location && File.exists?(file_location)
