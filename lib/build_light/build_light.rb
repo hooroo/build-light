@@ -53,10 +53,19 @@ module BuildLight
       @failed_builds ||= jenkins.failed_builds
     end
 
+    def dramatic_notice
+      logger.info "Playing dramatic notice to announce build failure"
+      SoundPlayer.play([ SoundPlayer.get_random_mp3('build_fails') ])
+    end
+
+
     def announce_failure
+
+      dramatic_notice
+
       failed_builds.each do |failed_build_name, failed_build|
 
-        SoundPlayer.play_mp3_commands([
+        SoundPlayer.play([
           SoundPlayer.get_mp3('announcements', 'build'),
           SoundPlayer.get_mp3('jobs', failed_build_name.gsub('-', ' ') ),
           SoundPlayer.get_mp3('announcements', 'failed')
@@ -64,13 +73,13 @@ module BuildLight
 
         if failed_build.culprits.size > 0
           pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
-          SoundPlayer.play_mp3_commands([
+          SoundPlayer.play([
             SoundPlayer.get_mp3('numbers', failed_build.culprits.size),
             SoundPlayer.get_mp3('announcements', pluralised),
             SoundPlayer.get_mp3('announcements', 'drumroll')
           ])
 
-          SoundPlayer.play_mp3_commands(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer.get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
+          SoundPlayer.play(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer.get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
         end
 
         `sleep 2`
@@ -93,16 +102,7 @@ module BuildLight
           set_status job_result
 
           if job_result == 'failure'
-            #Play sound effect on first occurence (randomly chosen from sounds directory)
-            logger.info "Playing failure sound effect"
-
-            mp3_directory = File.expand_path('../../../sounds/build_fails/', __FILE__)
-            sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
-            SoundPlayer.make_announcements( [ sound_clips.sample ] )
-
             announce_failure
-
-
           end
         end
 
