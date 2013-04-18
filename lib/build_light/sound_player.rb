@@ -16,17 +16,17 @@ module BuildLight
         File.expand_path("../../../sounds/#{type}/", __FILE__)
       end
 
-      def get_mp3 type, command
-        find_mp3(sound_directory(type), command)
+      def get_file type, command
+        find_file(sound_directory(type), command)
       end
 
-      def find_mp3(directory, command)
+      def find_file(directory, command)
         mp3_file = "#{command.to_s.gsub(/([\s\-])/, '_')}.mp3"
         file_path = File.join(directory, mp3_file)
         File.exists?(file_path) ? file_path : nil
       end
 
-      def get_random_mp3 type
+      def get_random_file type
         Dir.glob(File.join(sound_directory(type), '*.mp3')).sample
       end
 

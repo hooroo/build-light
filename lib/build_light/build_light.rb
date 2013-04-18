@@ -13,6 +13,30 @@ module BuildLight
       update_status
     end
 
+    def update_status
+
+      begin
+        logger.info "Last status: #{last_status}"
+
+        unless last_status == job_result #Status has changed
+          logger.info "Updating status to #{job_result}"
+
+          set_light job_result #usb light
+          set_status job_result #local status
+          announce_failure if job_result == 'failure'
+        end
+
+      rescue StandardError => e
+        puts 'Setting light :off'
+        light.off!
+        set_status 'off'
+        raise e
+      end
+
+    end
+
+    private
+
     def jenkins
       Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
     end
@@ -53,66 +77,37 @@ module BuildLight
       @failed_builds ||= jenkins.failed_builds
     end
 
-    def dramatic_notice
+    def announce_dramatic_notice
       logger.info "Playing dramatic notice to announce build failure"
-      SoundPlayer.play([ SoundPlayer.get_random_mp3('build_fails') ])
+      SoundPlayer.play([ SoundPlayer.get_random_file('build_fails') ])
     end
 
+    def announce_failed_build_name name
+      SoundPlayer.play([
+        SoundPlayer.get_file('announcements', 'build'),
+        SoundPlayer.get_file('jobs', name.gsub('-', ' ') ),
+        SoundPlayer.get_file('announcements', 'failed')
+      ])
+    end
+
+    def announce_culprits build
+      SoundPlayer.play([
+        SoundPlayer.get_file('numbers', build.culprits.size),
+        SoundPlayer.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
+        SoundPlayer.get_file('announcements', 'drumroll')
+      ])
+      SoundPlayer.play(build.culprits.inject([]) { | result, element | result << SoundPlayer.get_file('committers', element.split(/(\W)/).map(&:capitalize).join ) })
+    end
 
     def announce_failure
 
-      dramatic_notice
+      announce_dramatic_notice
 
-      failed_builds.each do |failed_build_name, failed_build|
-
-        SoundPlayer.play([
-          SoundPlayer.get_mp3('announcements', 'build'),
-          SoundPlayer.get_mp3('jobs', failed_build_name.gsub('-', ' ') ),
-          SoundPlayer.get_mp3('announcements', 'failed')
-        ])
-
-        if failed_build.culprits.size > 0
-          pluralised = failed_build.culprits.size == 1 ? 'committer' : "committers"
-          SoundPlayer.play([
-            SoundPlayer.get_mp3('numbers', failed_build.culprits.size),
-            SoundPlayer.get_mp3('announcements', pluralised),
-            SoundPlayer.get_mp3('announcements', 'drumroll')
-          ])
-
-          SoundPlayer.play(failed_build.culprits.inject([]) {|result, element| result << SoundPlayer.get_mp3('committers', element.split(/(\W)/).map(&:capitalize).join ) })
-        end
-
+      failed_builds.each do | name, failed_build |
+        announce_failed_build_name name
+        announce_culprits(failed_build) if failed_build.culprits.size > 0
         `sleep 2`
       end
-    end
-
-
-    def update_status
-
-      begin
-
-        logger.info "Last status: #{last_status}"
-
-        #Status has changed
-        unless last_status == job_result
-          logger.info "Updating..."
-
-          #Set USB Light and local status
-          set_light job_result
-          set_status job_result
-
-          if job_result == 'failure'
-            announce_failure
-          end
-        end
-
-      rescue StandardError => e
-        puts 'Setting light :off'
-        light.off!
-        set_status 'off'
-        raise e
-      end
-
     end
 
   end
