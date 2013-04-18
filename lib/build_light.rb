@@ -1,4 +1,5 @@
 require "build_light/version"
+require "build_light/settings"
 require "build_light/logger"
 require "build_light/jenkins"
 require "build_light/nil_light"
