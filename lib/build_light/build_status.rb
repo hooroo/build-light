@@ -17,7 +17,6 @@ class BuildStatus
     log_job job
   end
 
-
   def disabled?
     @result == DISABLED
   end
@@ -42,17 +41,6 @@ class BuildStatus
     job['lastCompletedBuild']['result'] unless job['lastCompletedBuild'].nil?
   end
 
-  def log_job job
-    unless job.nil?
-      job_info = "Name: #{job['name']}. Started at: #{Time.at(job['lastCompletedBuild']['timestamp']/1000)} "
-      job_info += "Duration: #{(job['lastCompletedBuild']['duration']/6000.00).round(2)} Status: #{job['lastCompletedBuild']['result']}"
-      logger.info job_info
-      logger.info "Culprits: #{culprits.join(',')}" if failure?
-    else
-      logger.warn "No Job info supplied"
-    end
-  end
-
   def build_claimed?(build_details_json)
     post_build_actions = build_details_json['actions']
     claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
@@ -64,6 +52,17 @@ class BuildStatus
     culprits = build_details_json['culprits']
     culprits = (culprits.collect { |culprit| culprit['fullName'].gsub('.', ' ').strip }).compact.uniq
     culprits
+  end
+
+  def log_job job
+    unless job.nil?
+      job_info = "Name: #{job['name']}. Started at: #{Time.at(job['lastCompletedBuild']['timestamp']/1000)} "
+      job_info += "Duration: #{(job['lastCompletedBuild']['duration']/6000.00).round(2)} Status: #{job['lastCompletedBuild']['result']}"
+      logger.info job_info
+      logger.info "Culprits: #{culprits.join(',')}" if failure?
+    else
+      logger.warn "No Job info supplied"
+    end
   end
 
 end

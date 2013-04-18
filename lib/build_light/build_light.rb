@@ -5,11 +5,11 @@ module BuildLight
 
   class Processor
 
-    attr_reader :light, :logger, :last_status
-
     def initialize
       @light = Blinky.new.light rescue NilLight.new
       @logger = Logging.logger['BuildLight']
+      @config = Settings.load("build_light")!
+      binding.pry
       update_status
     end
 
@@ -37,13 +37,15 @@ module BuildLight
 
     private
 
+    attr_reader :light, :logger, :last_status, :config
+
     def jenkins
       Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
     end
 
-    def config
-      @config ||= YAML::load( File.open('./config/build_light.yml') )
-    end
+    # def config
+    #   @config ||= YAML::load( File.open('./config/build_light.yml') )
+    # end
 
     def job_result
       @job_result ||=
