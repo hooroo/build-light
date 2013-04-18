@@ -8,8 +8,8 @@ module BuildLight
     def initialize
       @light = Blinky.new.light rescue NilLight.new
       @logger = Logging.logger['BuildLight']
-      @config = Settings.load("build_light")!
-      binding.pry
+      @config = Settings.load!("build_light")
+      @sound_player = SoundPlayer.new
       update_status
     end
 
@@ -27,7 +27,7 @@ module BuildLight
         end
 
       rescue StandardError => e
-        puts 'Setting light :off'
+        logger.error 'Setting light :off'
         light.off!
         set_status 'off'
         raise e
@@ -37,15 +37,11 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :config
+    attr_reader :light, :logger, :last_status, :config, :sound_player
 
     def jenkins
       Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
     end
-
-    # def config
-    #   @config ||= YAML::load( File.open('./config/build_light.yml') )
-    # end
 
     def job_result
       @job_result ||=
@@ -81,24 +77,24 @@ module BuildLight
 
     def announce_dramatic_notice
       logger.info "Playing dramatic notice to announce build failure"
-      SoundPlayer.play([ SoundPlayer.get_random_file('build_fails') ])
+      sound_player.play([ sound_player.get_random_file('build_fails') ])
     end
 
     def announce_failed_build_name name
-      SoundPlayer.play([
-        SoundPlayer.get_file('announcements', 'build'),
-        SoundPlayer.get_file('jobs', name.gsub('-', ' ') ),
-        SoundPlayer.get_file('announcements', 'failed')
+      sound_player.play([
+        sound_player.get_file('announcements', 'build'),
+        sound_player.get_file('jobs', name.gsub('-', ' ') ),
+        sound_player.get_file('announcements', 'failed')
       ])
     end
 
     def announce_culprits build
-      SoundPlayer.play([
-        SoundPlayer.get_file('numbers', build.culprits.size),
-        SoundPlayer.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
-        SoundPlayer.get_file('announcements', 'drumroll')
+      sound_player.play([
+        sound_player.get_file('numbers', build.culprits.size),
+        sound_player.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
+        sound_player.get_file('announcements', 'drumroll')
       ])
-      SoundPlayer.play(build.culprits.inject([]) { | result, element | result << SoundPlayer.get_file('committers', element.split(/(\W)/).map(&:capitalize).join ) })
+      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.get_file('committers', element.split(/(\W)/).map(&:capitalize).join ) })
     end
 
     def announce_failure
