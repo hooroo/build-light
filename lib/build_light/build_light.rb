@@ -18,9 +18,8 @@ module BuildLight
       begin
         logger.info "Last status: #{last_status}"
 
-        unless last_status == job_result #Status has changed
+        unless last_status == job_result #status has changed
           logger.info "Updating status to #{job_result}"
-
           set_light job_result #usb light
           set_status job_result #local status
           announce_failure if job_result == 'failure'
@@ -94,7 +93,7 @@ module BuildLight
         sound_player.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
         sound_player.get_file('announcements', 'drumroll')
       ])
-      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.get_file('committers', element.split(/(\W)/).map(&:capitalize).join ) })
+      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.get_file('committers', element) })
     end
 
     def announce_failure
