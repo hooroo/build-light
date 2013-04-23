@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    build_light (0.0.1)
+    build_light (0.0.2)
       json (~> 1.6.5)
       logging
 

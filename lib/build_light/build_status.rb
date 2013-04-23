@@ -59,7 +59,7 @@ class BuildStatus
       job_info = "Name: #{job['name']}. Started at: #{Time.at(job['lastCompletedBuild']['timestamp']/1000)} "
       job_info += "Duration: #{(job['lastCompletedBuild']['duration']/6000.00).round(2)} Status: #{job['lastCompletedBuild']['result']}"
       logger.info job_info
-      logger.info "Culprits: #{culprits.join(',')}" if failure?
+      logger.info "Culprits: #{culprits.join(',')}" if failure? and !culprits.empty?
     else
       logger.warn "No Job info supplied"
     end

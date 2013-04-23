@@ -20,9 +20,9 @@ module BuildLight
       commands.each_with_index do |file_location, index|
         if file_location && File.exists?(file_location)
           collected_commands << file_location
-        else
-          #Missing MP3 file, fall back to unknown
+        else #Missing MP3 file, fall back to unknown
           collected_commands << get_file('announcements', 'unknown')
+          logger.warn "Unknown file #{file_location}"
         end
       end
       make_announcements(collected_commands)
@@ -37,9 +37,12 @@ module BuildLight
     end
 
     def find_file(directory, command)
-      mp3_file = "#{command.to_s.gsub(/([\s\-])/, '_')}.mp3"
+      mp3_file = "#{dehumanise(command)}.mp3"
       file_path = File.join(directory, mp3_file)
-      File.exists?(file_path) ? file_path : nil
+    end
+
+    def dehumanise str
+      str.to_s.downcase.gsub(/([\s\-])/, '_')
     end
 
     def make_announcements(commands = [])
@@ -48,18 +51,8 @@ module BuildLight
       #Play recorded MP3s from Mac OSX
       cmd = "#{config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
       logger.info "Running Command: #{cmd}"
-      `#{cmd}`
-    end
-
-    def make_fallback_announcement(announcement)
-      return unless announcement && announcement != ''
-
-      #Old school Espeak (Sounds bad)
-      speech_params = "espeak -v en -s 125 -a 1300"
-
-      cmd = "#{speech_params} '#{announcement}'"
-      logger.info "RUNNING COMMAND : #{cmd}"
-      `#{cmd}`
+      exec = %x(#{cmd} &>/dev/null)
+      logger.info exec unless exec.empty?
     end
 
   end
