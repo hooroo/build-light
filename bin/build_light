@@ -1,6 +1,4 @@
 #!/usr/bin/env ruby
-require 'pry'
-
 require 'build_light'
 
 result = BuildLight::Processor.new()

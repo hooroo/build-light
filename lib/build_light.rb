@@ -9,10 +9,21 @@ require "build_light/build_light"
 
 module BuildLight
 
-  # def run(args)
-  #   BuildLight::Processor.new(args).run
-  # end
+  extend self
 
-  # module_function :run
+  def run(args)
+    BuildLight::Processor.new()
+  end
+
+  def configure
+    yield self
+    parameters
+  end
+
+  def parameters
+    h = {}
+    keys.each { |k| h[k.to_sym] = BuildLight.instance_variable_get("@#{k}") }
+    return h
+  end
 
 end
