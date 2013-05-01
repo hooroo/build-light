@@ -10,6 +10,7 @@ module BuildLight
       @logger = Logging.logger['BuildLight']
       @config = Settings.load!("build_light")
       @sound_player = SoundPlayer.new
+      binding.pry
       update_status
     end
 

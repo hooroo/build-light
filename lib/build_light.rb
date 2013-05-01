@@ -11,7 +11,9 @@ module BuildLight
 
   extend self
 
-  def run(args)
+  attr_accessor :sas, :juj
+
+  def run
     BuildLight::Processor.new()
   end
 
@@ -24,6 +26,10 @@ module BuildLight
     h = {}
     keys.each { |k| h[k.to_sym] = BuildLight.instance_variable_get("@#{k}") }
     return h
+  end
+
+  def keys
+    keys ||= [:juj, :sas]
   end
 
 end
