@@ -11,14 +11,11 @@ class BuildStatus
   UNKNOWN = 'UNKNOWN'
 
   def initialize(job)
-    @result = build_result(job)                                      || UNKNOWN
-    @has_been_claimed = build_claimed?(job['lastCompletedBuild'])    || false
-    @culprits = build_culprits(job['lastCompletedBuild'])            || []
+    @result             = build_result job                             || UNKNOWN
+    @buildable          = buildable job                                || UNKNOWN
+    @has_been_claimed   = build_claimed?(job['lastCompletedBuild'])    || false
+    @culprits           = build_culprits(job['lastCompletedBuild'])    || []
     log_job job
-  end
-
-  def disabled?
-    @result == DISABLED
   end
 
   def success?
@@ -33,12 +30,24 @@ class BuildStatus
     @has_been_claimed
   end
 
+  def claimed?
+    @has_been_claimed
+  end
+
+  def enabled?
+    @buildable
+  end
+
   def culprits; @culprits; end
 
   private
 
   def build_result(job)
     job['lastCompletedBuild']['result'] unless job['lastCompletedBuild'].nil?
+  end
+
+  def buildable job
+    job['buildable']
   end
 
   def build_claimed?(build_details_json)
