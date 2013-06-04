@@ -12,7 +12,8 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{summary}
   gem.homepage      = "http://sarasa.sas"
 
-  gem.files         = `git ls-files`.split($\)
+  # gem.files         = `git ls-files`.split($\)
+  gem.files         = `git ls-files`.split($\) << "config/build_light.yml" << "config/jenkins.yml"
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "build_light"
@@ -20,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.version       = BuildLight::VERSION
 
   gem.add_dependency "json", "~> 1.6.5"
-  # gem.add_dependency "blinky", :git => "git://github.com/hooroo/blinky.git"
+  gem.add_dependency "blinky"
   gem.add_dependency "logging"
 
   gem.add_development_dependency "rspec", "~> 2.6"

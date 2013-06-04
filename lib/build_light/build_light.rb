@@ -1,5 +1,6 @@
-# require 'blinky'
+require 'blinky'
 require 'yaml'
+require 'pry'
 
 module BuildLight
 
@@ -10,7 +11,6 @@ module BuildLight
       @logger = Logging.logger['BuildLight']
       @config = Settings.load!("build_light")
       @sound_player = SoundPlayer.new
-      binding.pry
       update_status
     end
 
@@ -37,10 +37,10 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :config, :sound_player
+    attr_reader :light, :logger, :last_status, :config, :sound_player, :jenkins
 
     def jenkins
-      Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
+      @jenkins ||= Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
     end
 
     def job_result
