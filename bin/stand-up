@@ -4,4 +4,4 @@ home_dir="$bin_dir/.."
 cd $home_dir
 [[ -s "/usr/local/rvm/scripts/rvm" ]] && . "/usr/local/rvm/scripts/rvm" # Load RVM function
 bundle install
-bundle exec ruby ./lib/stand_up.rb
+bundle exec ruby ./lib/build_light/stand_up.rb

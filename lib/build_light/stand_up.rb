@@ -5,6 +5,7 @@
 #30 9 * * 1,2,3,4,5 /bin/bash -c 'export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH; RBENV_VERSION=1.9.3-p125; /home/dev/build-light/bin/stand-up >> /home/dev/build-light/log/stand-up.log 2>&1'
 
 require 'date'
+require 'pry'
 
 def play_tunes(commands = [])
   return unless commands.size > 0
@@ -24,10 +25,10 @@ song_dir = DateTime.now.thursday? ? 'retro' : 'standup'
 puts "... Rollin'? : #{rick_astley}"
 
 if rick_astley == meaning_of_life
-  dir = File.expand_path('../../sounds/', __FILE__)
-  clip = File.join(dir, 'Rick-Astley-Never-Gonna-Give-You-Up.mp3')
+  dir = File.expand_path('../../../sounds/', __FILE__)
+  clip = File.join(dir, 'never_gonna_give_you_up.mp3')
 else
-  mp3_directory = File.expand_path("../../sounds/cron_jobs/#{song_dir}/", __FILE__)
+  mp3_directory = File.expand_path("../../../sounds/cron_jobs/#{song_dir}/", __FILE__)
   sound_clips = Dir.glob(File.join(mp3_directory, '*.mp3'))
   clip = sound_clips.sample
 end
