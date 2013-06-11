@@ -99,11 +99,21 @@ class JenkinsTimer
 
 end
 
-begin
-  config = YAML::load(File.open('./config/jenkins.yml'))
-  .merge({'view_to_time' => ENV['VIEW_TO_TIME']})
+def config
+  begin
+    YAML::load(File.open('./config/jenkins.yml'))
+  rescue
+    {
+      'username'       => ENV['USERNAME'],
+      'api_token'      => ENV['API_TOKEN'],
+      'jenkins_url'    => ENV['JENKINS_URL'],
+      'first_job_name' => ENV['FIRST_JOB_NAME']
+    }
+  end
+end
 
-  timer = JenkinsTimer.new(config)
+begin
+  timer = JenkinsTimer.new(config.merge('view_to_time' => ENV['VIEW_TO_TIME']))
 
   puts "Build minutes: ".upcase + timer.parallelised_build_minutes.to_s
   puts "-" * 20
