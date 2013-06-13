@@ -19,8 +19,8 @@ class JenkinsTimer
   end
 
   def parallelised_build_minutes
-    longest_successful_build = jobs.inject { |last_job, job| job_duration(last_job) > job_duration(job) ? last_job : job }
-    build_number_to_query = longest_successful_build["lastSuccessfulBuild"]["actions"][1]["causes"][0]["upstreamBuild"]
+    longest_build = longest_successful_build
+    build_number_to_query = longest_build["lastSuccessfulBuild"]["actions"][1]["causes"][0]["upstreamBuild"]
     first_job_for_timed_build = get_specific_job_build(first_job_name, build_number_to_query)
 
     diff = job_end_time(longest_successful_build) - job_start_time(first_job_for_timed_build)
@@ -63,6 +63,13 @@ class JenkinsTimer
     view["jobs"]
   end
 
+  def longest_successful_build
+    # comment because this is crazy method: 1. reject any jobs that have a fuzzy match to jobs_to_exclude array. 2. find the one with the longest duration. 3. ??? 4. profit
+    jobs.reject {| job | jobs_to_exclude.any? {|exclude_name| job["name"] =~ /#{exclude_name}/ } }.inject do |last_job, job|
+      job_duration(last_job) > job_duration(job) ? last_job : job
+    end
+  end
+
   def get_specific_job_build(job_name, job_number)
     get_json("job/#{job_name}/#{job_number}/api/json")
   end
@@ -95,6 +102,10 @@ class JenkinsTimer
     json_response["views"].select do |view|
       view["name"] == name
     end.first
+  end
+
+  def jobs_to_exclude
+    ['staging','production']
   end
 
 end
