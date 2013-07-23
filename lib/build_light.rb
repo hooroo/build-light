@@ -1,5 +1,6 @@
+require "awesome_print"
+require "pry"
 require "build_light/version"
-require "build_light/settings"
 require "build_light/logger"
 require "build_light/jenkins"
 require "build_light/nil_light"
@@ -11,7 +12,7 @@ module BuildLight
 
   extend self
 
-  attr_accessor :sas, :juj
+  attr_accessor :status_file, :voice_command, :sound_directories, :ci
 
   def run
     BuildLight::Processor.new()
@@ -25,11 +26,16 @@ module BuildLight
   def parameters
     h = {}
     keys.each { |k| h[k.to_sym] = BuildLight.instance_variable_get("@#{k}") }
+    # raise if h.any? { |property| property.nil? }
     return h
   end
 
   def keys
-    keys ||= [:juj, :sas]
+    keys ||= [:status_file, :voice_command, :sound_directories, :ci]
+  end
+
+  def voice_command
+    @voice_command ||= "mpg123"
   end
 
 end

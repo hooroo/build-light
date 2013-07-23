@@ -7,9 +7,9 @@ class Jenkins
   API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,buildable,lastCompletedBuild[result,timestamp,duration,actions[claimed],culprits[fullName]]]'
 
   def initialize(config)
-    @url = config['jenkins_url']
-    @username = config['username']
-    @api_token = config['api_token']
+    @url = config[:url]
+    @username = config[:username]
+    @api_token = config[:api_token]
   end
 
   def jobs
@@ -33,7 +33,7 @@ class Jenkins
   end
 
   def failed_builds
-    job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
+      job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
   end
 
   def has_no_build_failures?
@@ -59,18 +59,18 @@ class Jenkins
   private
 
   def api_request(url)
-    api_url = "#{url}/#{API_SUFFIX}"
-    uri = URI(api_url)
+    # api_url = "#{url}/#{API_SUFFIX}"
+    # uri = URI(api_url)
 
-    req = Net::HTTP::Get.new(uri.request_uri)
-    req.basic_auth @username, @api_token if @username && @api_token
+    # req = Net::HTTP::Get.new(uri.request_uri)
+    # req.basic_auth @username, @api_token if @username && @api_token
 
-    res = Net::HTTP.start(uri.host, uri.port) do |http|
-      http.request(req)
-    end
+    # res = Net::HTTP.start(uri.host, uri.port) do |http|
+    #   http.request(req)
+    # end
 
-    JSON.parse(res.body)
-    # JSON.parse(File.open('/Users/daniel/Desktop/jenkins2.json', 'r').readlines.first)
+    # JSON.parse(res.body)
+    JSON.parse(File.open('/Users/daniel/Desktop/jenkins2.json', 'r').readlines.first)
   end
 
 end

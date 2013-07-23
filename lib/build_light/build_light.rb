@@ -1,6 +1,5 @@
 require 'blinky'
 require 'yaml'
-require 'pry'
 
 module BuildLight
 
@@ -9,7 +8,6 @@ module BuildLight
     def initialize
       @light = Blinky.new.light rescue NilLight.new
       @logger = Logging.logger['BuildLight']
-      @config = Settings.load!("build_light")
       @sound_player = SoundPlayer.new
       update_status
     end
@@ -37,10 +35,10 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :config, :sound_player, :jenkins
+    attr_reader :light, :logger, :last_status, :sound_player, :jenkins
 
     def jenkins
-      @jenkins ||= Jenkins.new( YAML::load( File.open('./config/jenkins.yml') ) )
+      @jenkins ||= Jenkins.new( BuildLight.ci )
     end
 
     def job_result
@@ -58,12 +56,12 @@ module BuildLight
     end
 
     def last_status
-      @last_status ||= File.open(config['status_file'], 'a+').readlines.first
+      @last_status ||= File.open(BuildLight.status_file, 'a+').readlines.first
     end
 
     def set_status status
       logger.info "Setting Status: #{status}"
-      File.open(config['status_file'], 'w') { |f| f.write( status ) }
+      File.open(BuildLight.status_file, 'w') { |f| f.write( status ) }
     end
 
     def set_light status

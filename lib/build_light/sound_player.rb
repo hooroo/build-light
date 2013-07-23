@@ -3,16 +3,15 @@ module BuildLight
   class SoundPlayer
 
     def initialize
-      @config = Settings.load!("build_light")
       @logger = Logging.logger['SoundPlayer']
     end
 
     def get_file type, command
-      find_file(sound_directory(type), command)
+      find_file type, command
     end
 
     def get_random_file type
-      Dir.glob(File.join(sound_directory(type), '*.mp3')).sample
+      all_files(type).sample
     end
 
     def play(commands = [])
@@ -30,15 +29,23 @@ module BuildLight
 
     private
 
-    attr_reader :config, :logger
+    attr_reader :logger
 
-    def sound_directory type
-      File.expand_path("../../../sounds/#{type}/", __FILE__)
+    def main_sound_directory
+      File.expand_path("../../../sounds/", __FILE__)
     end
 
-    def find_file(directory, command)
+    def sound_directories
+      [ main_sound_directory ] + BuildLight.sound_directories
+    end
+
+    def all_files type
+      sound_directories.collect{ |dir| Dir.glob( File.join(dir, type, '*.mp3') ) }.flatten
+    end
+
+    def find_file(type, command)
       mp3_file = "#{dehumanise(command)}.mp3"
-      file_path = File.join(directory, mp3_file)
+      file_path = sound_directories.collect{ |dir| f = File.join(dir, type, mp3_file); return f if File.exists? f }.last
     end
 
     def dehumanise str
@@ -49,7 +56,7 @@ module BuildLight
       return unless commands.size > 0
 
       #Play recorded MP3s from Mac OSX
-      cmd = "#{config['command']} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+      cmd = "#{BuildLight.voice_command} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
       logger.info "Running Command: #{cmd}"
       exec = %x(#{cmd} &>/dev/null)
       logger.info exec unless exec.empty?
