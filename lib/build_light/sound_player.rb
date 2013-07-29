@@ -21,7 +21,6 @@ module BuildLight
           collected_commands << file_location
         else #Missing MP3 file, fall back to unknown
           collected_commands << get_file('announcements', 'unknown')
-          logger.warn "Unknown file #{file_location}"
         end
       end
       make_announcements(collected_commands)
@@ -46,6 +45,8 @@ module BuildLight
     def find_file(type, command)
       mp3_file = "#{dehumanise(command)}.mp3"
       file_path = sound_directories.collect{ |dir| f = File.join(dir, type, mp3_file); return f if File.exists? f }.last
+      logger.warn "Unknown file #{mp3_file}" unless file_path
+      file_path
     end
 
     def dehumanise str
