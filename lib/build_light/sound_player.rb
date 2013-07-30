@@ -44,6 +44,7 @@ module BuildLight
 
     def find_file(type, command)
       mp3_file = "#{dehumanise(command)}.mp3"
+      logger.info "Looking for file #{mp3_file} in #{sound_directories.join(',')}"
       file_path = sound_directories.collect{ |dir| f = File.join(dir, type, mp3_file); return f if File.exists? f }.last
       logger.warn "Unknown file #{mp3_file}" unless file_path
       file_path
