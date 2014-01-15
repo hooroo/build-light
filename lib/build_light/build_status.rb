@@ -59,7 +59,7 @@ class BuildStatus
   end
 
   def build_claimed? job
-    post_build_actions = job['lastCompletedBuild']['actions']
+    post_build_actions = job['lastCompletedBuild']['actions'].compact
     claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
     claimed = false if claimed.nil?
     claimed
