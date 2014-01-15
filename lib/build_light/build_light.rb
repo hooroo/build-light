@@ -1,4 +1,4 @@
-require 'blinky'
+require 'blinkee'
 require 'yaml'
 
 module BuildLight
