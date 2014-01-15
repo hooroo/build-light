@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/ashmckenzie/blinkee.git
-  revision: 2ce6df657dfa44eb3395315275f46ee841774d3f
-  branch: 2ce6df657dfa44eb3395315275f46ee841774d3f
+  revision: 4badf33ea6066597aa7f44e48b9bbdd78e5f701e
+  branch: 4badf33ea6066597aa7f44e48b9bbdd78e5f701e
   specs:
-    blinkee (0.0.3)
+    blinkee (0.0.4)
 
 PATH
   remote: .
