@@ -4,4 +4,4 @@ source 'https://rubygems.org'
 gemspec
 
 # override gemspec with our own repo
-gem "blinkee", github: "ashmckenzie/blinkee", branch: "4badf33ea6066597aa7f44e48b9bbdd78e5f701e"
+gem "blinkee", github: "ashmckenzie/blinkee", branch: "563b8a817b66324daff2db8d6697c11ae3d04647"
