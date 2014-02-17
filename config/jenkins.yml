@@ -1,0 +1,4 @@
+username:    'build-light'
+api_token:   '17fdb3c8b8a450fb0b5f320b0b4dc961'
+jenkins_url: 'http://192.168.0.10/'
+first_job_name:   'prepare'
