@@ -11,7 +11,7 @@ def play_tunes(commands = [])
   return unless commands.size > 0
 
   #Play recorded MP3s
-  cmd = "mpg123 #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+  cmd = "mpg123 -o alsa #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
   puts "RUNNING COMMAND : #{cmd}"
   `#{cmd}`
 end

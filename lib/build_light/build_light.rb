@@ -13,10 +13,8 @@ module BuildLight
     end
 
     def update_status
-
       begin
         logger.info "Last status: #{last_status}"
-
         unless last_status == job_result #status has changed
           logger.info "Updating status to #{job_result}"
           set_light job_result #usb light
@@ -56,7 +54,7 @@ module BuildLight
     end
 
     def last_status
-      @last_status ||= File.open(BuildLight.status_file, 'a+').readlines.first
+      @last_status ||= File.open(BuildLight.status_file, 'a+').readlines.first.gsub(/\s+/, "")
     end
 
     def set_status status
