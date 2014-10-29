@@ -36,7 +36,11 @@ module BuildLight
     attr_reader :light, :logger, :last_status, :sound_player, :ci
 
     def ci
-      @ci ||= Ci.new( BuildLight.ci )
+      @ci ||= ci_class.new( BuildLight.ci )
+    end
+
+    def ci_class
+      "CI::#{BuildLight.ci[:name]}".split('::').inject(Object) { | o,c | o.const_get c }
     end
 
     def job_result
