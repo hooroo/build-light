@@ -10,7 +10,7 @@ PATH
   specs:
     build_light (0.0.3)
       json (~> 1.6.5)
-      logging
+      logging (~> 1.8.2)
 
 GEM
   remote: https://rubygems.org/
@@ -20,11 +20,11 @@ GEM
     diff-lcs (1.2.2)
     json (1.6.8)
     little-plugger (1.1.3)
-    logging (1.8.1)
+    logging (1.8.2)
       little-plugger (>= 1.1.3)
-      multi_json (>= 1.3.6)
+      multi_json (>= 1.8.4)
     method_source (0.8.1)
-    multi_json (1.8.4)
+    multi_json (1.10.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)

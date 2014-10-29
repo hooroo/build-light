@@ -15,8 +15,7 @@ module CI
       end
 
       def jobs
-        binding.pry
-        @jobs ||= api_request.first['jobs']
+        @jobs ||= filter_jobs(api_request.first['jobs'])
       end
 
       def job_statuses
@@ -28,15 +27,15 @@ module CI
       end
 
       def build_status(job)
-        BuildStatus.new(job)
+        Job.new(job)
       end
 
       def successful_builds
-        job_statuses.select {|job_name, build_status| build_status.success? }
+        job_statuses.select { |job_name, build_status| build_status.success? }
       end
 
       def failed_builds
-          job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
+          job_statuses.select { |job_name, build_status| build_status.failure? and build_status.enabled? }
       end
 
       def has_no_build_failures?
@@ -62,6 +61,10 @@ module CI
       private
 
       attr_reader :url, :api_suffix
+
+      def filter_jobs jobs
+        jobs.reject{ |job| job['type'] == 'waiter' }
+      end
 
       def api_request
         api_url = "#{url}/#{api_suffix}"

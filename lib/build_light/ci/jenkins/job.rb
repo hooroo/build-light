@@ -35,10 +35,6 @@ module CI
         @has_been_claimed
       end
 
-      def claimed?
-        @has_been_claimed
-      end
-
       def enabled?
         @buildable
       end

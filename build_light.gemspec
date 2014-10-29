@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.version       = BuildLight::VERSION
 
   gem.add_dependency "json", "~> 1.6.5"
-  gem.add_dependency "logging"
+  gem.add_dependency "logging", "~> 1.8.2"
 
   gem.add_development_dependency "rspec", "~> 2.6"
   gem.add_development_dependency "awesome_print"

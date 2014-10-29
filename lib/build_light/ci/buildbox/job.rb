@@ -6,77 +6,74 @@ module CI
 
       include ::Logger
 
-      SUCCESS = 'SUCCESS'
-      FAILURE = 'FAILURE'
-      DISABLED = 'DISABLED'
+      SUCCESS = 'passed'
+      FAILURE = 'failed'
       UNKNOWN = 'UNKNOWN'
 
+      attr_reader :culprits
+
       def initialize(job)
-        if job_is_valid? job
-          @result             = build_result job       || UNKNOWN
-          @buildable          = buildable job          || UNKNOWN
-          @has_been_claimed   = build_claimed? job     || false
-          @culprits           = build_culprits job     || []
-          log_job job
+        @job                  = job
+        if job_is_valid?
+          @result             = build_result       || UNKNOWN
+          @culprits           = build_culprits
+          log_job
         else
           logger.warn "CI job is incomplete or invalid"
         end
       end
 
       def success?
-        @result == SUCCESS
+        result == SUCCESS
       end
 
       def failure?
-        @result == FAILURE
+        result == FAILURE
       end
 
       def claimed?
-        @has_been_claimed
-      end
-
-      def claimed?
-        @has_been_claimed
+        build_claimed?
       end
 
       def enabled?
-        @buildable
+        # not supported yet
+        true
       end
-
-      def culprits; @culprits; end
 
       private
 
-      def job_is_valid? job
-        !job.nil? && job.has_key?('lastCompletedBuild') && !job['lastCompletedBuild'].nil?
+      attr_reader :job, :result
+
+      def job_is_valid?
+        !job.nil?
       end
 
-      def build_result(job)
-        job['lastCompletedBuild']['result'] unless job['lastCompletedBuild'].nil?
+      def build_result
+        job['state'] unless job['state'].nil?
       end
 
-      def buildable job
-        job['buildable']
+      def build_claimed?
+        # not supported yet
+        false
       end
 
-      def build_claimed? job
-        post_build_actions = job['lastCompletedBuild']['actions'].compact
-        claimed = (post_build_actions.collect { |action| action['claimed'] }).compact.first
-        claimed = false if claimed.nil?
-        claimed
+      def build_culprits
+        # not implemented yet
+        []
       end
 
-      def build_culprits job
-        culprits = job['lastCompletedBuild']['culprits']
-        culprits = (culprits.collect { |culprit| culprit['fullName'].gsub('.', ' ').strip }).compact.uniq
-        culprits
+      def job_duration
+        return "N/A" unless job['finished_at'] && job['started_at']
+        "#{( (Time.parse(job['finished_at']) - Time.parse(job['started_at'])) / 60).to_f.round(2)} minutes"
       end
 
-      def log_job job
-        job_info = "Name: #{job['name']}. Started at: #{Time.at(job['lastCompletedBuild']['timestamp']/1000)} "
-        job_info += "Duration: #{(job['lastCompletedBuild']['duration']/6000.00).round(2)} Status: #{job['lastCompletedBuild']['result']}"
+      def log_job
+        job_info  = "Name: #{job['name']}. "
+        job_info += "Started at: #{job['started_at']} " if job['started_at']
+        job_info += "Duration: #{job_duration} "
+        job_info += "Status: #{job['state']}"
         logger.info job_info
-        logger.info "Culprits: #{culprits.join(',')}" if failure? and !culprits.empty?
+        # logger.info "Culprits: #{culprits.join(',')}" if failure? and !culprits.empty?
       end
 
     end
