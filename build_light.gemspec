@@ -6,11 +6,11 @@ require 'build_light/version'
 
 Gem::Specification.new do |gem|
 
-  gem.authors       = ["author"]
+  gem.authors       = ["Tom Meier", "Ash McKenzie", "Warner Godfrey", "Daniel Angel Bradford"]
   gem.email         = ["email"]
   gem.description   = %q{description}
   gem.summary       = %q{summary}
-  gem.homepage      = "http://sarasa.sas"
+  gem.homepage      = "http://hooroo.com"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
