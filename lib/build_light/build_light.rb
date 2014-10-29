@@ -40,7 +40,7 @@ module BuildLight
     end
 
     def ci_class
-      "CI::#{BuildLight.ci[:name]}".split('::').inject(Object) { | o,c | o.const_get c }
+      "CI::#{BuildLight.ci[:name]}::Build".split('::').inject(Object) { | o,c | o.const_get c }
     end
 
     def job_result

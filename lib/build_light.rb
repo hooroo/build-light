@@ -4,7 +4,6 @@ require "build_light/version"
 require "build_light/logger"
 require "build_light/nil_light"
 require "build_light/sound_player"
-require "build_light/build_status"
 require "build_light/build_light"
 
 module BuildLight
@@ -14,7 +13,8 @@ module BuildLight
   attr_accessor :status_file, :voice_command, :sound_directories, :ci
 
   def run
-    require "build_light/ci/#{BuildLight.ci[:name].downcase}"
+    require "build_light/ci/#{BuildLight.ci[:name].downcase}/build"
+    require "build_light/ci/#{BuildLight.ci[:name].downcase}/job"
     BuildLight::Processor.new()
   end
 
