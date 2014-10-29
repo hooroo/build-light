@@ -3,7 +3,7 @@ require 'net/http'
 require 'json'
 require 'open-uri'
 
-class Jenkins
+class Ci
   API_SUFFIX = '/api/json?token=TOKEN&depth=2&tree=jobs[name,buildable,lastCompletedBuild[result,timestamp,duration,actions[claimed],culprits[fullName]]]'
 
   def initialize(config)
