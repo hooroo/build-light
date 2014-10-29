@@ -5,9 +5,9 @@ module BuildLight
 
   class Processor
 
-    def initialize
-      @light = Blinkee.new.light rescue NilLight.new
-      @logger = Logging.logger['BuildLight']
+    def initialize(light_manager: Blinkee, logger: Logging)
+      @light = light_manager.new.light rescue NilLight.new
+      @logger = logger.logger['BuildLight']
       @sound_player = SoundPlayer.new
       update_status
     end

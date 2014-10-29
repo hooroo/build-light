@@ -11,7 +11,7 @@ module CI
 
       def initialize(config)
         @url = config[:url]
-        @api_suffix = "accounts/hooroo/projects/hotels/builds?api_key=#{config[:api_token]}"
+        @api_suffix = "accounts/#{config[:organisation]}/projects/#{config[:build]}/builds?api_key=#{config[:api_token]}"
       end
 
       def jobs
