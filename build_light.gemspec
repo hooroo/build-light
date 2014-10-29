@@ -23,8 +23,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "logging", "~> 1.8.2"
 
   gem.add_development_dependency "rspec", "~> 2.6"
-  gem.add_development_dependency "awesome_print"
-  gem.add_development_dependency "pry"
-  gem.add_development_dependency "rake"
+  gem.add_development_dependency "awesome_print", "~> 1.2.0"
+  gem.add_development_dependency "pry", "~> 0.10.1"
+  gem.add_development_dependency "rake", "~> 10.3.2"
 
 end
