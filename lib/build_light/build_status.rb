@@ -18,7 +18,7 @@ class BuildStatus
       @culprits           = build_culprits job     || []
       log_job job
     else
-      logger.warn "Jenkins job is incomplete or invalid"
+      logger.warn "CI job is incomplete or invalid"
     end
   end
 

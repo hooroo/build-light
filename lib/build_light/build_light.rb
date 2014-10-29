@@ -33,20 +33,20 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :sound_player, :jenkins
+    attr_reader :light, :logger, :last_status, :sound_player, :ci
 
-    def jenkins
-      @jenkins ||= Jenkins.new( BuildLight.ci )
+    def ci
+      @ci ||= Ci.new( BuildLight.ci )
     end
 
     def job_result
       @job_result ||=
         case
-          when jenkins.job_statuses.empty?
+          when ci.job_statuses.empty?
             'off'
-          when jenkins.has_no_build_failures?
+          when ci.has_no_build_failures?
             'success'
-          when jenkins.has_no_unclaimed_builds?
+          when ci.has_no_unclaimed_builds?
             'warning'
           else
             'failure'
@@ -68,7 +68,7 @@ module BuildLight
     end
 
     def failed_builds
-      @failed_builds ||= jenkins.failed_builds
+      @failed_builds ||= ci.failed_builds
     end
 
     def announce_dramatic_notice
