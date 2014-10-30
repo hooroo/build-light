@@ -9,17 +9,15 @@ module CI
 
     class Build
 
+      include ::Logger
+
       attr_reader :build
 
       def initialize(config)
         @url = config[:url]
         @api_suffix = "accounts/#{config[:organisation]}/projects/#{config[:build]}/builds?api_key=#{config[:api_token]}"
-      end
-
-      def build
-        @build ||= api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.each do | build |
-          return build unless build['finished_at']
-        end
+        @build = fetch_build
+        logger.info "Latest fully completed build is ##{build['number']}"
       end
 
       def jobs
@@ -38,32 +36,32 @@ module CI
         Job.new(job)
       end
 
-      def successful_builds
+      def successful_jobs
         job_statuses.select { |job_name, build_status| build_status.success? }
       end
 
-      def failed_builds
+      def failed_jobs
           job_statuses.select { |job_name, build_status| build_status.failure? and build_status.enabled? }
       end
 
-      def has_no_build_failures?
-        failed_builds.empty?
+      def has_no_job_failures?
+        failed_jobs.empty?
       end
 
-      def has_build_failure?
-        !has_no_build_failures?
+      def has_job_failures?
+        !has_no_job_failures?
       end
 
-      def unclaimed_builds
-        failed_builds.delete_if {|job_name, build_status| build_status.claimed? }
+      def unclaimed_jobs
+        failed_jobs.delete_if {|job_name, build_status| build_status.claimed? }
       end
 
-      def has_unclaimed_build?
-        !has_no_unclaimed_builds?
+      def has_unclaimed_jobs?
+        !has_no_unclaimed_jobs?
       end
 
-      def has_no_unclaimed_builds?
-        unclaimed_builds.empty?
+      def has_no_unclaimed_jobs?
+        unclaimed_jobs.empty?
       end
 
       private
@@ -72,6 +70,10 @@ module CI
 
       def filter_jobs jobs
         jobs.reject{ |job| job['type'] == 'waiter' }
+      end
+
+      def fetch_build
+        api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.detect{ | build | build['finished_at'] && build['state'] != 'canceled' }
       end
 
       def api_request

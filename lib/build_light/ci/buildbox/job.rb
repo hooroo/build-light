@@ -7,7 +7,7 @@ module CI
       include ::Logger
 
       SUCCESS = 'passed'
-      FAILURE = 'broken'
+      FAILURE = /failed|broken/
       UNKNOWN = 'UNKNOWN'
 
       attr_reader :culprits
@@ -28,7 +28,7 @@ module CI
       end
 
       def failure?
-        result == FAILURE
+        result =~ FAILURE
       end
 
       def claimed?

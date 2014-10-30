@@ -33,32 +33,32 @@ module CI
         Job.new(job)
       end
 
-      def successful_builds
+      def successful_jobs
         job_statuses.select {|job_name, build_status| build_status.success? }
       end
 
-      def failed_builds
+      def failed_jobs
           job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
       end
 
-      def has_no_build_failures?
-        failed_builds.empty?
+      def has_no_job_failures?
+        failed_jobs.empty?
       end
 
-      def has_build_failure?
-        !has_no_build_failures?
+      def has_job_failures?
+        !has_no_job_failures?
       end
 
-      def unclaimed_builds
-        failed_builds.delete_if {|job_name, build_status| build_status.claimed? }
+      def unclaimed_jobs
+        failed_jobs.delete_if {|job_name, build_status| build_status.claimed? }
       end
 
-      def has_unclaimed_build?
-        !has_no_unclaimed_builds?
+      def has_unclaimed_jobs?
+        !has_no_unclaimed_jobs?
       end
 
-      def has_no_unclaimed_builds?
-        unclaimed_builds.empty?
+      def has_no_unclaimed_jobs?
+        unclaimed_jobs.empty?
       end
 
       private

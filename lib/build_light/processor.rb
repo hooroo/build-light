@@ -49,9 +49,9 @@ module BuildLight
         case
           when ci.job_statuses.empty?
             'off'
-          when ci.has_no_build_failures?
+          when ci.has_no_job_failures?
             'success'
-          when ci.has_no_unclaimed_builds?
+          when ci.has_no_unclaimed_jobs?
             'warning'
           else
             'failure'
@@ -72,8 +72,8 @@ module BuildLight
       light.__send__("#{status}!")
     end
 
-    def failed_builds
-      @failed_builds ||= ci.failed_builds
+    def failed_jobs
+      @failed_jobs ||= ci.failed_jobs
     end
 
     def announce_dramatic_notice
@@ -81,7 +81,7 @@ module BuildLight
       sound_player.play([ sound_player.get_random_file('build_fails') ])
     end
 
-    def announce_failed_build_name name
+    def announce_failed_job_name name
       sound_player.play([
         sound_player.get_file('announcements', 'build'),
         sound_player.get_file('jobs', name.gsub('-', ' ') ),
@@ -102,9 +102,9 @@ module BuildLight
 
       announce_dramatic_notice
 
-      failed_builds.each do | name, failed_build |
-        announce_failed_build_name name
-        announce_culprits(failed_build) if failed_build.culprits.size > 0
+      failed_jobs.each do | name, failed_job |
+        announce_failed_job_name name
+        announce_culprits(failed_job) if failed_job.culprits.size > 0
         `sleep 2`
       end
     end

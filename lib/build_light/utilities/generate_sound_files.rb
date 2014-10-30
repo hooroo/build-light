@@ -36,7 +36,7 @@ job_names.each do |job_name|
 end
 
 #Generate User names
-authors = jenkins.successful_builds.collect{|build_name, build| build.culprits}.flatten.uniq.sort
+authors = jenkins.successful_jobs.collect{|build_name, build| build.culprits}.flatten.uniq.sort
 authors.each do |author_name|
   mp3_file_target_path = File.join(committers_directory, "#{author_name.to_s.gsub(' ', '_')}.mp3")
   cmd = "#{say_command} '#{author_name}' && lame /tmp/temp.aiff #{mp3_file_target_path}"
