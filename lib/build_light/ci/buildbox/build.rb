@@ -9,13 +9,21 @@ module CI
 
     class Build
 
+      attr_reader :build
+
       def initialize(config)
         @url = config[:url]
         @api_suffix = "accounts/#{config[:organisation]}/projects/#{config[:build]}/builds?api_key=#{config[:api_token]}"
       end
 
+      def build
+        @build ||= api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.each do | build |
+          return build unless build['finished_at']
+        end
+      end
+
       def jobs
-        @jobs ||= filter_jobs(api_request.first['jobs'])
+        @jobs ||= filter_jobs(build['jobs'])
       end
 
       def job_statuses

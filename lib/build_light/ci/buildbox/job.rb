@@ -7,7 +7,7 @@ module CI
       include ::Logger
 
       SUCCESS = 'passed'
-      FAILURE = 'failed'
+      FAILURE = 'broken'
       UNKNOWN = 'UNKNOWN'
 
       attr_reader :culprits

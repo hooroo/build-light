@@ -2,8 +2,9 @@ module BuildLight
 
   class SoundPlayer
 
-    def initialize
+    def initialize config
       @logger = Logging.logger['SoundPlayer']
+      @config = config
     end
 
     def get_file type, command
@@ -28,14 +29,14 @@ module BuildLight
 
     private
 
-    attr_reader :logger
+    attr_reader :logger, :config
 
     def main_sound_directory
       File.expand_path("../../../sounds/", __FILE__)
     end
 
     def sound_directories
-      [ main_sound_directory ] + BuildLight.sound_directories
+      [ main_sound_directory ] + config.sound_directories
     end
 
     def all_files type
@@ -58,7 +59,7 @@ module BuildLight
       return unless commands.size > 0
 
       #Play recorded MP3s from Mac OSX
-      cmd = "#{BuildLight.voice_command} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+      cmd = "#{config.voice_command} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
       logger.info "Running Command: #{cmd}"
       exec = %x(#{cmd} &>/dev/null)
       logger.info exec unless exec.empty?

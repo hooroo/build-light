@@ -5,10 +5,11 @@ module BuildLight
 
   class Processor
 
-    def initialize(light_manager: Blinkee, logger: Logging)
+    def initialize(light_manager: Blinkee, logger: Logging, config:)
       @light = light_manager.new.light rescue NilLight.new
       @logger = logger.logger['BuildLight']
-      @sound_player = SoundPlayer.new
+      @config = config
+      @sound_player = SoundPlayer.new config
       update_status
     end
 
@@ -33,14 +34,14 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :sound_player, :ci
+    attr_reader :light, :logger, :last_status, :sound_player, :ci, :config
 
     def ci
-      @ci ||= ci_class.new( BuildLight.ci )
+      @ci ||= ci_class.new( config.ci )
     end
 
     def ci_class
-      "CI::#{BuildLight.ci[:name]}::Build".split('::').inject(Object) { | o,c | o.const_get c }
+      "CI::#{config.ci[:name]}::Build".split('::').inject(Object) { | o,c | o.const_get c }
     end
 
     def job_result
@@ -58,12 +59,12 @@ module BuildLight
     end
 
     def last_status
-      @last_status ||= File.open(BuildLight.status_file, 'a+').readlines.first.gsub(/\s+/, "")
+      @last_status ||= File.open(config.status_file, 'a+').readlines.first.gsub(/\s+/, "")
     end
 
     def set_status status
       logger.info "Setting Status: #{status}"
-      File.open(BuildLight.status_file, 'w') { |f| f.write( status ) }
+      File.open(config.status_file, 'w') { |f| f.write( status ) }
     end
 
     def set_light status
