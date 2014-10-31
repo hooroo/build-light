@@ -15,9 +15,10 @@ module BuildLight
 
     def run!
       verify_ci_data
+      require "build_light/ci/#{configuration.ci[:name].downcase}/ci"
       require "build_light/ci/#{configuration.ci[:name].downcase}/build"
       require "build_light/ci/#{configuration.ci[:name].downcase}/job"
-      Processor.new( config: configuration )
+      Processor.new( config: configuration ).update_status!
     end
 
     def configure

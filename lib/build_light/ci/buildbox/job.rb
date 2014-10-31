@@ -15,8 +15,8 @@ module CI
       def initialize(job)
         @job                  = job
         if job_is_valid?
-          @result             = build_result       || UNKNOWN
-          @culprits           = build_culprits
+          @result             = job_result       || UNKNOWN
+          @culprits           = job_culprits
           log_job
         else
           logger.warn "CI job is incomplete or invalid"
@@ -32,7 +32,7 @@ module CI
       end
 
       def claimed?
-        build_claimed?
+        job_claimed?
       end
 
       def enabled?
@@ -48,16 +48,16 @@ module CI
         !job.nil?
       end
 
-      def build_result
+      def job_result
         job['state'] unless job['state'].nil?
       end
 
-      def build_claimed?
+      def job_claimed?
         # not supported yet
         false
       end
 
-      def build_culprits
+      def job_culprits
         # not implemented yet
         []
       end

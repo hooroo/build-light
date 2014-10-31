@@ -6,12 +6,12 @@ module CI
 
       include ::Logger
 
-      attr_reader :build_list
+      attr_reader :build_list, :config
 
       def initialize config
         @config = config
-        @build_list = config.builds
-        logger.info "LOG SOMETHINGGGGGGGGGGGGG"
+        @build_list = config[:builds]
+        logger.info "Fetching build information for: #{build_list.join(', ')}"
       end
 
       def builds
@@ -19,7 +19,7 @@ module CI
       end
 
       def single_build build_name
-        Build.new build_name, config
+        Build.new(build_name: build_name, config: config)
       end
 
       def successful_builds
@@ -27,7 +27,7 @@ module CI
       end
 
       def failed_builds
-        build_statuses.select { | build | build.failure? }
+        builds.select { | build | build.failure? }
       end
 
       def has_no_build_failures?

@@ -11,49 +11,38 @@ module CI
 
       include ::Logger
 
-      attr_reader :build
+      attr_reader :build_data, :jobs, :name
 
-      def initialize(config)
+      def initialize(build_name:, config:)
+        @name = build_name
         @url = config[:url]
-        @api_suffix = "accounts/#{config[:organisation]}/projects/#{config[:build]}/builds?api_key=#{config[:api_token]}"
-        @build = fetch_build
-        logger.info "Latest fully completed build is ##{build['number']}"
+        @api_suffix = "accounts/#{config[:organisation]}/projects/#{name}/builds?api_key=#{config[:api_token]}"
+        @build_data = fetch_build
+        logger.info "Latest fully completed build for project '#{name}' is ##{build_data['number']}"
       end
 
-      def jobs
-        @jobs ||= filter_jobs(build['jobs'])
-      end
-
-      def job_statuses
-        job_statuses = {}
-        jobs.each do |job|
-          job_statuses[job['name']] = build_status(job)
-        end
-        job_statuses
-      end
-
-      def build_status(job)
-        Job.new(job)
-      end
-
-      def successful_jobs
-        job_statuses.select { |job_name, build_status| build_status.success? }
-      end
-
-      def failed_jobs
-          job_statuses.select { |job_name, build_status| build_status.failure? and build_status.enabled? }
-      end
-
-      def has_no_job_failures?
+      def success?
         failed_jobs.empty?
       end
 
-      def has_job_failures?
-        !has_no_job_failures?
+      def failure?
+        !success?
+      end
+
+      def jobs
+        @jobs ||= assemble_jobs
+      end
+
+      def successful_jobs
+        jobs.select { |job| job.success? }
+      end
+
+      def failed_jobs
+        jobs.select { |job| job.failure? and job.enabled? }
       end
 
       def unclaimed_jobs
-        failed_jobs.delete_if {|job_name, build_status| build_status.claimed? }
+        jobs.delete_if {|job| job.claimed? }
       end
 
       def has_unclaimed_jobs?
@@ -64,12 +53,29 @@ module CI
         unclaimed_jobs.empty?
       end
 
+      def culprits
+        jobs.map {|job| job.culprits }.flatten.uniq
+      end
+
       private
 
       attr_reader :url, :api_suffix
 
-      def filter_jobs jobs
-        jobs.reject{ |job| job['type'] == 'waiter' }
+      def job job_data
+        Job.new job_data
+      end
+
+      def assemble_jobs
+        logger.info "Assembling jobs for #{name}"
+        job_list = []
+        valid_jobs.each do |job_data|
+          job_list.push(job job_data)
+        end
+        job_list
+      end
+
+      def valid_jobs
+        build_data['jobs'].reject{ |job| ['waiter', 'manual'].include? job['type'] }
       end
 
       def fetch_build

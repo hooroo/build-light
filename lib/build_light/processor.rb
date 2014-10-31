@@ -10,18 +10,18 @@ module BuildLight
       @logger = logger.logger['BuildLight']
       @config = config
       @sound_player = SoundPlayer.new config
-      update_status
     end
 
-    def update_status
+    def update_status!
       begin
-        logger.info "Last status: #{last_status}"
-        unless last_status == job_result #status has changed
-          logger.info "Updating status to #{job_result}"
-          set_light job_result #usb light
-          set_status job_result #local status
-          announce_failure if job_result == 'failure'
+        logger.info "Prior status: #{last_status}"
+        unless last_status == ci_result #status has changed
+          logger.info "Updating status to #{ci_result}"
+          set_light ci_result #usb light
+          set_status ci_result #local status
+          announce_failure if ci_result == 'failure'
         end
+        logger.info "Successful: #{ci.successful_builds.length} Failed: #{ci.failed_builds.length}"
 
       rescue StandardError => e
         logger.error 'Setting light :off'
@@ -41,18 +41,19 @@ module BuildLight
     end
 
     def ci_class
-      "CI::#{config.ci[:name]}::Build".split('::').inject(Object) { | o,c | o.const_get c }
+      "CI::#{config.ci[:name]}::CI".split('::').inject(Object) { | o,c | o.const_get c }
     end
 
-    def job_result
-      @job_result ||=
+    def ci_result
+      @ci_result ||=
         case
-          when ci.job_statuses.empty?
+          when ci.builds.empty?
             'off'
-          when ci.has_no_job_failures?
+          when ci.has_no_build_failures?
             'success'
-          when ci.has_no_unclaimed_jobs?
-            'warning'
+          # decomissioning for now!
+          # when ci.has_no_unclaimed_jobs?
+          #   'warning'
           else
             'failure'
         end
@@ -72,8 +73,8 @@ module BuildLight
       light.__send__("#{status}!")
     end
 
-    def failed_jobs
-      @failed_jobs ||= ci.failed_jobs
+    def failed_builds
+      @failed_builds ||= ci.failed_builds
     end
 
     def announce_dramatic_notice
@@ -81,10 +82,10 @@ module BuildLight
       sound_player.play([ sound_player.get_random_file('build_fails') ])
     end
 
-    def announce_failed_job_name name
+    def announce_failed_build_name name
       sound_player.play([
         sound_player.get_file('announcements', 'build'),
-        sound_player.get_file('jobs', name.gsub('-', ' ') ),
+        sound_player.get_file('builds', name.gsub('-', ' ')),
         sound_player.get_file('announcements', 'failed')
       ])
     end
@@ -102,9 +103,9 @@ module BuildLight
 
       announce_dramatic_notice
 
-      failed_jobs.each do | name, failed_job |
-        announce_failed_job_name name
-        announce_culprits(failed_job) if failed_job.culprits.size > 0
+      failed_builds.each do | failed_build |
+        announce_failed_build_name failed_build.name
+        announce_culprits(failed_build) if failed_build.culprits.size > 0
         `sleep 2`
       end
     end

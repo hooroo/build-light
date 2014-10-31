@@ -41,12 +41,12 @@ module CI
           job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
       end
 
-      def has_no_job_failures?
+      def success?
         failed_jobs.empty?
       end
 
-      def has_job_failures?
-        !has_no_job_failures?
+      def failure?
+        !success?
       end
 
       def unclaimed_jobs
