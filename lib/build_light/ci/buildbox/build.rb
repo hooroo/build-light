@@ -11,13 +11,15 @@ module CI
 
       include ::Logger
 
-      attr_reader :build_data, :jobs, :name
+      attr_reader :build_data, :jobs, :name, :organisation, :culprits
 
       def initialize(build_name:, config:)
-        @name = build_name
-        @url = config[:url]
-        @api_suffix = "accounts/#{config[:organisation]}/projects/#{name}/builds?api_key=#{config[:api_token]}"
-        @build_data = fetch_build
+        @name         = build_name
+        @url          = config[:url]
+        @organisation = config[:organisation]
+        @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}"
+        @build_data   = fetch_build
+        @culprits     = fetch_culprits
         logger.info "Latest fully completed build for project '#{name}' is ##{build_data['number']}"
       end
 
@@ -53,16 +55,20 @@ module CI
         unclaimed_jobs.empty?
       end
 
-      def culprits
-        [ github_author ].reject{ |x| x.nil? }
-      end
-
       private
 
       attr_reader :url, :api_suffix
 
       def job job_data
         Job.new job_data
+      end
+
+      def fetch_culprits
+        if failure?
+          [ github_author ].reject{ |x| x.nil? }
+        else
+          []
+        end
       end
 
       def assemble_jobs
@@ -79,14 +85,17 @@ module CI
       end
 
       def github_author
-        github_commit_info.get_deep(:commit, :author, :name)
+        author = github_commit_info.get_deep(:commit, :author, :name)
+        logger.info "Build break culprit: #{author}" if author
+        author
       end
 
       def github_commit_info
         begin
-          octokit.commit("#{config[:organisation]}/#{name}", build_data[:commit])
+          octokit.commit("#{organisation}/#{name}", build_data['commit'])
         rescue => e
           logger.error "Couldn't fetch break culprits from Github"
+          {}
         end
       end
 

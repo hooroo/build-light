@@ -21,7 +21,7 @@ module BuildLight
           set_status ci_result #local status
           announce_failure if ci_result == 'failure'
         end
-        logger.info "Successful: #{ci.successful_builds.length} Failed: #{ci.failed_builds.length}"
+        logger.info "Successful builds: #{ci.successful_builds.length} Failed builds: #{ci.failed_builds.length}"
 
       rescue StandardError => e
         logger.error 'Setting light :off'
@@ -102,7 +102,6 @@ module BuildLight
     def announce_failure
 
       announce_dramatic_notice
-
       failed_builds.each do | failed_build |
         announce_failed_build_name failed_build.name
         announce_culprits(failed_build) if failed_build.culprits.size > 0
