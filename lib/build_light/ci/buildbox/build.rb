@@ -54,7 +54,7 @@ module CI
       end
 
       def culprits
-        jobs.map {|job| job.culprits }.flatten.uniq
+        [ github_author ].reject{ |x| x.nil? }
       end
 
       private
@@ -76,6 +76,22 @@ module CI
 
       def valid_jobs
         build_data['jobs'].reject{ |job| ['waiter', 'manual'].include? job['type'] }
+      end
+
+      def github_author
+        github_commit_info.get_deep(:commit, :author, :name)
+      end
+
+      def github_commit_info
+        begin
+          octokit.commit("#{config[:organisation]}/#{name}", build_data[:commit])
+        rescue => e
+          logger.error "Couldn't fetch break culprits from Github"
+        end
+      end
+
+      def octokit
+        @octokit ||= Octokit::Client.new(:netrc => true)
       end
 
       def fetch_build

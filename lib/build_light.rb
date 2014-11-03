@@ -1,6 +1,7 @@
 require "awesome_print"
 require "pry"
 require "build_light/version"
+require "build_light/utilities/deep_hash"
 require "build_light/logger"
 require "build_light/errors"
 require "build_light/nil_light"

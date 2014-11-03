@@ -1,3 +1,5 @@
+require 'octokit'
+
 module CI
 
   module Buildbox
@@ -16,7 +18,6 @@ module CI
         @job                  = job
         if job_is_valid?
           @result             = job_result       || UNKNOWN
-          @culprits           = job_culprits
           log_job
         else
           logger.warn "CI job is incomplete or invalid"
@@ -55,11 +56,6 @@ module CI
       def job_claimed?
         # not supported yet
         false
-      end
-
-      def job_culprits
-        # not implemented yet
-        []
       end
 
       def job_duration
