@@ -17,30 +17,6 @@ module CI
         @api_token = config[:api_token]
       end
 
-      def jobs
-        @jobs ||= api_request(@url)['jobs']
-      end
-
-      def job_statuses
-        job_statuses = {}
-        jobs.each do |job|
-          job_statuses[job['name']] = build_status(job)
-        end
-        job_statuses
-      end
-
-      def build_status(job)
-        Job.new(job)
-      end
-
-      def successful_jobs
-        job_statuses.select {|job_name, build_status| build_status.success? }
-      end
-
-      def failed_jobs
-          job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
-      end
-
       def success?
         failed_jobs.empty?
       end
@@ -49,9 +25,22 @@ module CI
         !success?
       end
 
+      def jobs
+        @jobs ||= api_request(@url)['jobs']
+      end
+
+      def successful_jobs
+        job_statuses.select {|job_name, build_status| build_status.success? }
+      end
+
+      def failed_jobs
+        job_statuses.select {|job_name, build_status| build_status.failure? and build_status.enabled? }
+      end
+
       def unclaimed_jobs
         failed_jobs.delete_if {|job_name, build_status| build_status.claimed? }
       end
+
 
       def has_unclaimed_jobs?
         !has_no_unclaimed_jobs?
@@ -62,6 +51,18 @@ module CI
       end
 
       private
+
+      def build_status(job)
+        Job.new(job)
+      end
+
+      def job_statuses
+        job_statuses = {}
+        jobs.each do |job|
+          job_statuses[job['name']] = build_status(job)
+        end
+        job_statuses
+      end
 
       def api_request(url)
         api_url = "#{url}/#{API_SUFFIX}"

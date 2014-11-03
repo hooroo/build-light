@@ -39,8 +39,6 @@ module CI
         @buildable
       end
 
-      def culprits; @culprits; end
-
       private
 
       def job_is_valid? job
