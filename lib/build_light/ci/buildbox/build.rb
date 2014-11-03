@@ -19,8 +19,8 @@ module CI
         @organisation = config[:organisation]
         @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}"
         @build_data   = fetch_build
-        @culprits     = fetch_culprits
         logger.info "Latest fully completed build for project '#{name}' is ##{build_data['number']}"
+        @culprits     = fetch_culprits
       end
 
       def success?
