@@ -13,9 +13,11 @@ module CI
 
       attr_reader :build_data, :jobs, :name, :organisation, :culprits
 
+      URL = 'https://api.buildbox.io/v1'
+
+
       def initialize(build_name:, config:)
         @name         = build_name
-        @url          = config[:url]
         @organisation = config[:organisation]
         @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}"
         @build_data   = fetch_build
@@ -57,7 +59,7 @@ module CI
 
       private
 
-      attr_reader :url, :api_suffix
+      attr_reader :api_suffix
 
       def job job_data
         Job.new job_data
@@ -108,7 +110,7 @@ module CI
       end
 
       def api_request
-        api_url = "#{url}/#{api_suffix}"
+        api_url = "#{URL}/#{api_suffix}"
         uri = URI(api_url)
 
         http = Net::HTTP.new(uri.host, uri.port)

@@ -2,6 +2,8 @@ module BuildLight
 
   class SoundPlayer
 
+    attr_reader :commands
+
     def initialize config
       @logger = Logging.logger['SoundPlayer']
       @config = config
@@ -57,12 +59,9 @@ module BuildLight
 
     def make_announcements(commands = [])
       return unless commands.size > 0
-
-      #Play recorded MP3s from Mac OSX
-      cmd = "#{config.voice_command} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')}"
+      cmd = "#{config.voice_command} #{commands.collect{|cmd| "'#{cmd}'" }.join(' ')} &>/dev/null"
       logger.info "Running Command: #{cmd}"
-      exec = %x(#{cmd} &>/dev/null)
-      logger.info exec unless exec.empty?
+      `#{cmd}`
     end
 
   end
