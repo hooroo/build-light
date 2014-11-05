@@ -29,7 +29,7 @@ module CI
       end
 
       def failure?
-        result =~ FAILURE
+        !(result =~ FAILURE).nil?
       end
 
       def claimed?

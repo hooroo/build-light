@@ -11,17 +11,16 @@ module CI
 
       include ::Logger
 
-      attr_reader :build_data, :jobs, :name, :organisation, :culprits
+      attr_reader :build, :jobs, :name, :organisation, :culprits
 
       URL = 'https://api.buildbox.io/v1'
-
 
       def initialize(build_name:, config:)
         @name         = build_name
         @organisation = config[:organisation]
         @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}"
-        @build_data   = fetch_build
-        logger.info "Latest fully completed build for project '#{name}' is ##{build_data['number']}"
+        @build        = fetch_build
+        logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
         @culprits     = fetch_culprits
       end
 
@@ -83,7 +82,7 @@ module CI
       end
 
       def valid_jobs
-        build_data['jobs'].reject{ |job| ['waiter', 'manual'].include? job['type'] }
+        build['jobs'].reject{ |job| ['waiter', 'manual'].include? job['type'] }
       end
 
       def github_author
@@ -94,7 +93,7 @@ module CI
 
       def github_commit_info
         begin
-          octokit.commit("#{organisation}/#{name}", build_data['commit'])
+          octokit.commit("#{organisation}/#{name}", build['commit'])
         rescue => e
           logger.error "Couldn't fetch break culprits from Github"
           {}

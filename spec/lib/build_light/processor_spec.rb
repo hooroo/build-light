@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'build_light'
 require 'build_light/processor'
 
 module BuildLight
@@ -26,7 +27,6 @@ module BuildLight
       end
 
       context "when there's no change in status" do
-
         it "doesn't action the light or change the status" do
           processor.update_status!
           expect(processor).to_not have_received :set_light
