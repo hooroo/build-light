@@ -32,7 +32,7 @@ module CI
       context "given any build" do
 
         before do
-          allow_any_instance_of(CI::Buildbox::Build).to receive(:api_request) { failed_build }
+          allow_any_instance_of(described_class).to receive(:api_request) { failed_build }
         end
 
         it "identifies the last completed build (#build)" do
@@ -43,7 +43,6 @@ module CI
           classes = build.jobs.map(&:class).uniq
           expect(build.jobs.length).to eq 26
           expect(classes.length).to eq 1
-          expect(classes.first).to be CI::Buildbox::Job
         end
 
         it "identifies the successful and failed jobs (#failed_jobs) & (#successful_jobs)" do
@@ -65,7 +64,7 @@ module CI
       context "given a failed build" do
 
         before do
-          allow_any_instance_of(CI::Buildbox::Build).to receive(:api_request) { failed_build }
+          allow_any_instance_of(described_class).to receive(:api_request) { failed_build }
         end
 
         it "marks it as failed (#failure?) & (#success?)" do
@@ -78,7 +77,7 @@ module CI
       context "given a successful build" do
 
         before do
-          allow_any_instance_of(CI::Buildbox::Build).to receive(:api_request) { successful_build }
+          allow_any_instance_of(described_class).to receive(:api_request) { successful_build }
         end
 
         it "marks it as successful (#failure?) & (#success?)" do
