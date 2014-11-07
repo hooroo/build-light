@@ -11,14 +11,15 @@ module CI
 
       include ::Logger
 
-      attr_reader :build, :jobs, :name, :organisation, :culprits
+      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch
 
       URL = 'https://api.buildbox.io/v1'
 
       def initialize(build_name:, config:)
         @name         = build_name
         @organisation = config[:organisation]
-        @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}"
+        @branch       = config[:branch] || 'master'
+        @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}&branch=#{branch}"
         @build        = fetch_build
         logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
         @culprits     = fetch_culprits
