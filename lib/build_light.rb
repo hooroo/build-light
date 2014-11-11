@@ -37,14 +37,14 @@ module BuildLight
   end
 
   class Configuration
-    attr_accessor :status_file, :voice_command, :sound_directories, :ci
+    attr_accessor :status_file, :voice_command, :sound_directories, :ci, :light_manager
 
     def initialize
       @status_file          = File.expand_path(File.join('..', 'last_status'), __FILE__)
       @voice_command        = "mpg123"
       @sound_directories    = [ File.expand_path(File.join('..', 'sounds'), __FILE__) ]
-      @ci                   = nil
       @light_manager        = "Blinkee"
+      @ci                   = nil
     end
   end
 
