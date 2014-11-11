@@ -1,14 +1,15 @@
 require 'blinkee'
+require 'squinty'
 require 'yaml'
 
 module BuildLight
 
   class Processor
 
-    def initialize(light_manager: Blinkee, logger: Logging, config:)
-      @light = light_manager.new.light rescue NilLight.new
-      @logger = logger.logger['BuildLight']
+    def initialize(logger: Logging, config:)
       @config = config
+      @light = config.light_manager.constantize.new.light rescue NilLight.new
+      @logger = logger.logger['BuildLight']
       @sound_player = SoundPlayer.new config
     end
 

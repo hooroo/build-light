@@ -44,6 +44,7 @@ module BuildLight
       @voice_command        = "mpg123"
       @sound_directories    = [ File.expand_path(File.join('..', 'sounds'), __FILE__) ]
       @ci                   = nil
+      @light_manager        = "Blinkee"
     end
   end
 
