@@ -9,7 +9,6 @@ module BuildLight
     def initialize(logger: Logging, config:)
       @config = config
       @light = Object.const_get(config.light_manager).new.light rescue NilLight.new
-      binding.pry
       @logger = logger.logger['BuildLight']
       @sound_player = SoundPlayer.new config
     end
