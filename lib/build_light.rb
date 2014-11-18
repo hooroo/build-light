@@ -5,6 +5,7 @@ require "build_light/utilities/deep_hash"
 require "build_light/logger"
 require "build_light/errors"
 require "build_light/light_manager"
+require "build_light/ci_manager"
 require "build_light/sound_player"
 require "build_light/processor"
 
@@ -15,10 +16,7 @@ module BuildLight
     attr_accessor :configuration
 
     def run!
-      verify_ci_data
-      require "build_light/ci/#{configuration.ci[:name].downcase}/ci"
-      require "build_light/ci/#{configuration.ci[:name].downcase}/build"
-      require "build_light/ci/#{configuration.ci[:name].downcase}/job"
+      validate_ci_data
       Processor.new( config: configuration ).update_status!
     end
 
@@ -30,7 +28,7 @@ module BuildLight
 
     private
 
-    def verify_ci_data
+    def validate_ci_data
       raise UnspecifiedCIInformation.new('Please enter CI configuration parameters') unless configuration.ci
     end
 

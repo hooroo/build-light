@@ -8,25 +8,25 @@ module BuildLight
 
     def initialize(logger: Logging, config:)
       @config = config
-      @light = LightManager.new
-      # @light = Object.const_get(config.light_manager).new.light rescue NilLight.new
       @logger = logger.logger['BuildLight']
+      @light  = LightManager.light config.light_manager
+      @ci     = CIManager.new config.ci
       @sound_player = SoundPlayer.new config
     end
 
     def update_status!
       begin
         logger.info "Prior status: #{last_status}"
-        unless last_status == ci_result #status has changed
-          logger.info "Updating status to #{ci_result}"
-          set_light ci_result #usb light
-          set_status ci_result #local status
-          announce_failure if ci_result == 'failure'
+        unless last_status == ci.result #status has changed
+          logger.info "Updating status to #{ci.result}"
+          set_light ci.result #usb light
+          set_status ci.result #local status
+          announce_failure if ci.result == 'failure'
         end
         logger.info "Successful builds: #{ci.successful_builds.length} Failed builds: #{ci.failed_builds.length}"
 
       rescue StandardError => e
-        logger.error 'Setting light :off'
+        logger.error 'Setting light: off'
         light.off!
         set_status 'off'
         raise e
@@ -36,30 +36,7 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :last_status, :sound_player, :ci, :config
-
-    def ci
-      @ci ||= ci_class.new( config.ci )
-    end
-
-    def ci_class
-      "CI::#{config.ci[:name]}::CI".split('::').inject(Object) { | o,c | o.const_get c }
-    end
-
-    def ci_result
-      @ci_result ||=
-        case
-          when ci.builds.empty?
-            'off'
-          when ci.has_no_build_failures?
-            'success'
-          # decomissioning for now!
-          # when ci.has_no_unclaimed_jobs?
-          #   'warning'
-          else
-            'failure'
-        end
-    end
+    attr_reader :light, :logger, :last_status, :sound_player, :config, :ci
 
     def last_status
       @last_status ||= File.open(config.status_file, 'a+').readlines.first.gsub(/\s+/, "")
