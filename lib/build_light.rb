@@ -16,7 +16,6 @@ module BuildLight
     attr_accessor :configuration
 
     def run!
-      validate_ci_data
       Processor.new( config: configuration ).update_status!
     end
 
@@ -24,12 +23,6 @@ module BuildLight
       configuration ||= Configuration.new
       yield configuration
       @configuration = configuration
-    end
-
-    private
-
-    def validate_ci_data
-      raise UnspecifiedCIInformation.new('Please enter CI configuration parameters') unless configuration.ci
     end
 
   end

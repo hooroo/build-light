@@ -8,6 +8,7 @@ module BuildLight
 
     let(:last_status)       { "failure" }
     let(:config)            { Configuration.new }
+    let(:ci)                { double(CIManager.new(config.ci)) }
     subject(:processor)     { described_class.new(config: config) }
 
     before do
@@ -22,7 +23,7 @@ module BuildLight
     describe "#update_status!" do
 
       before do
-        processor.stub(:ci_result)    { "failure" }
+        processor.stub_chain(:ci, :result).and_return "failure"
         processor.stub(:last_status)  { last_status }
       end
 

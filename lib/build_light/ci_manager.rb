@@ -6,6 +6,7 @@ module BuildLight
 
     def initialize config
       @config = config
+      require_ci_manager
     end
 
     def result
@@ -35,20 +36,19 @@ module BuildLight
 
     attr_reader :config
 
-    def ci_class
-      @ci_class ||= ci_class_name.new( config.ci )
-    end
-
     def require_ci_manager
       require "build_light/ci/#{config[:name].downcase}/ci"
       require "build_light/ci/#{config[:name].downcase}/build"
       require "build_light/ci/#{config[:name].downcase}/job"
     end
 
-    def ci_class_name
-      "CI::#{config.ci[:name]}::CI".split('::').inject(Object) { | o,c | o.const_get c }
+    def ci_class
+      @ci_class ||= ci_class_name.new( config )
     end
 
+    def ci_class_name
+      "CI::#{config[:name]}::CI".split('::').inject(Object) { | o,c | o.const_get c }
+    end
 
   end
 
