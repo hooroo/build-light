@@ -1,13 +1,13 @@
 require 'spec_helper'
-require 'build_light/ci/buildbox/ci'
+require 'build_light/ci/buildkite/ci'
 
 module CI
 
-  module Buildbox
+  module Buildkite
 
     describe CI do
 
-      let(:config)          { { name: 'Buildbox', organisation: 'hooroo', builds: [ 'hotels', 'flightbookings' ], api_token: 'abcd' } }
+      let(:config)          { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels', 'flightbookings' ], api_token: 'abcd' } }
       let(:failed_build)    { double(success?: false, failure?: true) }
       let(:successful_build)    { double(success?: true, failure?: false) }
       subject(:ci)     { described_class.new config }

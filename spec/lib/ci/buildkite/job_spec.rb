@@ -1,15 +1,15 @@
 require 'spec_helper'
-require 'build_light/ci/buildbox/job'
+require 'build_light/ci/buildkite/job'
 
 
 module CI
 
-  module Buildbox
+  module Buildkite
 
     describe Job do
 
-      let(:failed_job_json)            { JSON.parse File.read("#{Fixtures.path}/buildbox/job/failed.json") }
-      let(:successful_job_json)        { JSON.parse File.read("#{Fixtures.path}/buildbox/job/successful.json") }
+      let(:failed_job_json)            { JSON.parse File.read("#{Fixtures.path}/buildkite/job/failed.json") }
+      let(:successful_job_json)        { JSON.parse File.read("#{Fixtures.path}/buildkite/job/successful.json") }
       let(:json_data)                  { failed_job_json }
       subject(:job)     { described_class.new json_data }
 

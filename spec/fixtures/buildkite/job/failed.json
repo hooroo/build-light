@@ -3,14 +3,14 @@
   "type": "script",
   "name": "a_failed_job",
   "state": "failed",
-  "log_url": "https://api.buildbox.io/v1/accounts/company/projects/project/builds/666/jobs/8abda489-0f26-468a-bb38-b72f73ee30c3/log",
-  "script_path": "buildbox/scripts/generate_assets",
+  "log_url": "https://api.buildkite.com/v1/accounts/company/projects/project/builds/666/jobs/8abda489-0f26-468a-bb38-b72f73ee30c3/log",
+  "script_path": "buildkite/scripts/generate_assets",
   "exit_status": 1,
   "artifact_paths": "assets.tar.gz",
   "agent": {
     "id": "11037fc7-f2ed-49da-b48a-6d7f630f1a74",
-    "url": "https://api.buildbox.io/v1/accounts/company/agents/11037fc7-f2ed-49da-b48a-6d7f630f1a74",
-    "name": "buildbox-agent-production"
+    "url": "https://api.buildkite.com/v1/accounts/company/agents/11037fc7-f2ed-49da-b48a-6d7f630f1a74",
+    "name": "buildkite-agent-production"
   },
   "created_at": "2014-10-31 04:54:55 UTC",
   "scheduled_at": "2014-10-31 04:54:55 UTC",

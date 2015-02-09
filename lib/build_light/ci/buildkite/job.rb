@@ -2,7 +2,7 @@ require 'octokit'
 
 module CI
 
-  module Buildbox
+  module Buildkite
 
     class Job
 

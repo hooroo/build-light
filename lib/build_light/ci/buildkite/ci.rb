@@ -1,6 +1,6 @@
 module CI
 
-  module Buildbox
+  module Buildkite
 
     class CI
 

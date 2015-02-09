@@ -5,7 +5,7 @@ require 'open-uri'
 
 module CI
 
-  module Buildbox
+  module Buildkite
 
     class Build
 
@@ -13,7 +13,7 @@ module CI
 
       attr_reader :build, :jobs, :name, :organisation, :culprits, :branch
 
-      URL = 'https://api.buildbox.io/v1'
+      URL = 'https://api.buildkite.com/v1'
 
       def initialize(build_name:, config:)
         @name         = build_name

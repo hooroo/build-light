@@ -1,7 +1,7 @@
 [
   {
     "id": "03b97a63-c428-4b13-8b88-eaafebde8edd",
-    "url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419",
+    "url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419",
     "number": 419,
     "state": "passed",
     "message": "A successful",
@@ -15,14 +15,14 @@
         "type": "script",
         "name": ":palm_tree:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/599f54f4-2924-4c73-9abd-aa81d30ea705/log",
-        "script_path": "buildbox/scripts/generate_assets",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/599f54f4-2924-4c73-9abd-aa81d30ea705/log",
+        "script_path": "buildkite/scripts/generate_assets",
         "exit_status": 0,
         "artifact_paths": "assets.tar.gz",
         "agent": {
           "id": "6b7d3988-eb38-44c4-b63d-c5765188af39",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/6b7d3988-eb38-44c4-b63d-c5765188af39",
-          "name": "buildbox-agent-production-i-48f07c87.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/6b7d3988-eb38-44c4-b63d-c5765188af39",
+          "name": "buildkite-agent-production-i-48f07c87.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -37,14 +37,14 @@
         "type": "script",
         "name": "acceptance_new_consumer :busts_in_silhouette:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/2c978217-c67e-48dc-a9b5-3d057ad34aa7/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/2c978217-c67e-48dc-a9b5-3d057ad34aa7/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "6b7d3988-eb38-44c4-b63d-c5765188af39",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/6b7d3988-eb38-44c4-b63d-c5765188af39",
-          "name": "buildbox-agent-production-i-48f07c87.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/6b7d3988-eb38-44c4-b63d-c5765188af39",
+          "name": "buildkite-agent-production-i-48f07c87.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -56,14 +56,14 @@
         "type": "script",
         "name": "acceptance_new_extranet :chart_with_upwards_trend:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/94d2e205-2ac9-445c-9343-26a88d32511b/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/94d2e205-2ac9-445c-9343-26a88d32511b/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "07d1ae2b-096f-481a-bbde-98f76affd47c",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/07d1ae2b-096f-481a-bbde-98f76affd47c",
-          "name": "buildbox-agent-production-i-cc5c5703.02"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/07d1ae2b-096f-481a-bbde-98f76affd47c",
+          "name": "buildkite-agent-production-i-cc5c5703.02"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -75,14 +75,14 @@
         "type": "script",
         "name": "assets_staging",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/fa07a275-1b22-446d-8057-63070b3ba5c1/log",
-        "script_path": "buildbox/scripts/assets_sync",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/fa07a275-1b22-446d-8057-63070b3ba5c1/log",
+        "script_path": "buildkite/scripts/assets_sync",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "12002dc8-5487-4da9-8429-7e73b1805d77",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/12002dc8-5487-4da9-8429-7e73b1805d77",
-          "name": "buildbox-agent-production-i-4bf07c84.02"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/12002dc8-5487-4da9-8429-7e73b1805d77",
+          "name": "buildkite-agent-production-i-4bf07c84.02"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -94,14 +94,14 @@
         "type": "script",
         "name": "consumer_javascripts",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/4d53a267-b275-4eff-af6a-b5759caa7627/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/4d53a267-b275-4eff-af6a-b5759caa7627/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "cfd95d0d-c0bb-4e1c-8129-3d28758a8276",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/cfd95d0d-c0bb-4e1c-8129-3d28758a8276",
-          "name": "buildbox-agent-production-i-48f07c87.02"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/cfd95d0d-c0bb-4e1c-8129-3d28758a8276",
+          "name": "buildkite-agent-production-i-48f07c87.02"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -113,14 +113,14 @@
         "type": "script",
         "name": "non_specific_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/3ff05d04-0b4e-4c81-801b-c1e1c9f14e98/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/3ff05d04-0b4e-4c81-801b-c1e1c9f14e98/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "93e0b0ae-06e0-4c35-8c80-f8d76b81a355",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/93e0b0ae-06e0-4c35-8c80-f8d76b81a355",
-          "name": "buildbox-agent-production-i-4fcec680.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/93e0b0ae-06e0-4c35-8c80-f8d76b81a355",
+          "name": "buildkite-agent-production-i-4fcec680.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -132,14 +132,14 @@
         "type": "script",
         "name": "other_model_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/ed450ee8-a7fd-40fa-a78c-b350c2f119ff/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/ed450ee8-a7fd-40fa-a78c-b350c2f119ff/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "6d45b55d-8da7-4154-8a89-92fadce2ce44",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/6d45b55d-8da7-4154-8a89-92fadce2ce44",
-          "name": "buildbox-agent-production-i-cc5c5703.03"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/6d45b55d-8da7-4154-8a89-92fadce2ce44",
+          "name": "buildkite-agent-production-i-cc5c5703.03"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -151,14 +151,14 @@
         "type": "script",
         "name": "booking_model_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/d84f2a51-8425-436a-a972-fe994d9a1226/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/d84f2a51-8425-436a-a972-fe994d9a1226/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "1f725c31-a6db-4abc-9e78-cfedacfa4dc7",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/1f725c31-a6db-4abc-9e78-cfedacfa4dc7",
-          "name": "buildbox-agent-production-i-4bf07c84.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/1f725c31-a6db-4abc-9e78-cfedacfa4dc7",
+          "name": "buildkite-agent-production-i-4bf07c84.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -170,14 +170,14 @@
         "type": "script",
         "name": "metrics",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/bc904e01-6853-4cb9-8c28-4e8d0090e0bb/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/bc904e01-6853-4cb9-8c28-4e8d0090e0bb/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "232dd2fc-4209-40c8-b9ba-b49f5199cb79",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/232dd2fc-4209-40c8-b9ba-b49f5199cb79",
-          "name": "buildbox-agent-production-i-4bf07c84.03"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/232dd2fc-4209-40c8-b9ba-b49f5199cb79",
+          "name": "buildkite-agent-production-i-4bf07c84.03"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -189,14 +189,14 @@
         "type": "script",
         "name": "fast",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/a56e8a55-c593-4830-b21a-14ad750c65a2/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/a56e8a55-c593-4830-b21a-14ad750c65a2/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "c9c7e4ee-3dc4-416b-9c4a-6d37d68c391e",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/c9c7e4ee-3dc4-416b-9c4a-6d37d68c391e",
-          "name": "buildbox-agent-production-i-cc5c5703.00"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/c9c7e4ee-3dc4-416b-9c4a-6d37d68c391e",
+          "name": "buildkite-agent-production-i-cc5c5703.00"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -208,14 +208,14 @@
         "type": "script",
         "name": "inventory_model_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/0fa4aa0c-28dc-4c2e-8d0b-70d57d3adc5e/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/0fa4aa0c-28dc-4c2e-8d0b-70d57d3adc5e/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "a305a633-058c-421a-a47d-b57b33122501",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/a305a633-058c-421a-a47d-b57b33122501",
-          "name": "buildbox-agent-production-i-4fcec680.00"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/a305a633-058c-421a-a47d-b57b33122501",
+          "name": "buildkite-agent-production-i-4fcec680.00"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -227,14 +227,14 @@
         "type": "script",
         "name": "top_level_model_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/c4f5c459-3eb9-4d68-80a0-4d1df6208d6d/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/c4f5c459-3eb9-4d68-80a0-4d1df6208d6d/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "a762ec8c-e4ca-483d-b552-1d770e88242c",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/a762ec8c-e4ca-483d-b552-1d770e88242c",
-          "name": "buildbox-agent-production-i-4bf07c84.00"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/a762ec8c-e4ca-483d-b552-1d770e88242c",
+          "name": "buildkite-agent-production-i-4bf07c84.00"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -246,14 +246,14 @@
         "type": "script",
         "name": "controllers_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/8fee04ac-36b0-4e48-b56a-0cd492413116/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/8fee04ac-36b0-4e48-b56a-0cd492413116/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "dec241c1-20b7-468f-bc10-7154e1531389",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/dec241c1-20b7-468f-bc10-7154e1531389",
-          "name": "buildbox-agent-production-i-48f07c87.00"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/dec241c1-20b7-468f-bc10-7154e1531389",
+          "name": "buildkite-agent-production-i-48f07c87.00"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -265,14 +265,14 @@
         "type": "script",
         "name": "decorators_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e4a4b324-5495-4b4c-928f-f91eae06cb9b/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e4a4b324-5495-4b4c-928f-f91eae06cb9b/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "31c2b6c2-a1dd-45f7-86fe-836bc3af1b11",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/31c2b6c2-a1dd-45f7-86fe-836bc3af1b11",
-          "name": "buildbox-agent-production-i-4af07c85.00"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/31c2b6c2-a1dd-45f7-86fe-836bc3af1b11",
+          "name": "buildkite-agent-production-i-4af07c85.00"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -284,14 +284,14 @@
         "type": "script",
         "name": "helpers_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/9beea3bb-783a-4252-9ecb-558de59f01cb/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/9beea3bb-783a-4252-9ecb-558de59f01cb/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "5f6161ac-a0dc-4cc5-8eb8-2508e7a650d7",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/5f6161ac-a0dc-4cc5-8eb8-2508e7a650d7",
-          "name": "buildbox-agent-production-i-4af07c85.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/5f6161ac-a0dc-4cc5-8eb8-2508e7a650d7",
+          "name": "buildkite-agent-production-i-4af07c85.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -303,14 +303,14 @@
         "type": "script",
         "name": "integration_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f876c150-8304-4e12-bdd0-f78a9a909cd5/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f876c150-8304-4e12-bdd0-f78a9a909cd5/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "6b66bc19-bc70-4a0b-861d-1a0bacaca3ce",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/6b66bc19-bc70-4a0b-861d-1a0bacaca3ce",
-          "name": "buildbox-agent-production-i-4fcec680.03"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/6b66bc19-bc70-4a0b-861d-1a0bacaca3ce",
+          "name": "buildkite-agent-production-i-4fcec680.03"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -322,14 +322,14 @@
         "type": "script",
         "name": "extranet_javascripts",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f2639ed2-5b82-476d-82aa-39c483096978/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f2639ed2-5b82-476d-82aa-39c483096978/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "3454be8c-6d29-4206-94ae-16ebab1b15f3",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/3454be8c-6d29-4206-94ae-16ebab1b15f3",
-          "name": "buildbox-agent-production-i-48f07c87.03"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/3454be8c-6d29-4206-94ae-16ebab1b15f3",
+          "name": "buildkite-agent-production-i-48f07c87.03"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -341,14 +341,14 @@
         "type": "script",
         "name": "flight_bookers_javascripts",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/5bb1d2b1-2c4e-411b-8c38-8c7644f2652a/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/5bb1d2b1-2c4e-411b-8c38-8c7644f2652a/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "7a7b801a-c904-4ed5-a921-f7bc57205da0",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/7a7b801a-c904-4ed5-a921-f7bc57205da0",
-          "name": "buildbox-agent-production-i-4af07c85.02"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/7a7b801a-c904-4ed5-a921-f7bc57205da0",
+          "name": "buildkite-agent-production-i-4af07c85.02"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -360,14 +360,14 @@
         "type": "script",
         "name": "booking_dashboard_javascripts",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f070ced7-900a-4669-8c26-067af5746c96/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/f070ced7-900a-4669-8c26-067af5746c96/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 1,
         "artifact_paths": "",
         "agent": {
           "id": "d5754e3d-3112-4170-861a-d1927928dd11",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/d5754e3d-3112-4170-861a-d1927928dd11",
-          "name": "buildbox-agent-production-i-cc5c5703.01"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/d5754e3d-3112-4170-861a-d1927928dd11",
+          "name": "buildkite-agent-production-i-cc5c5703.01"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -379,14 +379,14 @@
         "type": "script",
         "name": "pact_provider_specs",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/df6fc2c6-7c87-4abf-9d51-1c6f093f9acc/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/df6fc2c6-7c87-4abf-9d51-1c6f093f9acc/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "5e6e73e0-68d6-483f-9490-69aa1c93f3c3",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/5e6e73e0-68d6-483f-9490-69aa1c93f3c3",
-          "name": "buildbox-agent-production-i-4af07c85.03"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/5e6e73e0-68d6-483f-9490-69aa1c93f3c3",
+          "name": "buildkite-agent-production-i-4af07c85.03"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -398,14 +398,14 @@
         "type": "script",
         "name": "acceptance_new_api",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/d6854891-3568-405a-b175-ae7c41290de1/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/d6854891-3568-405a-b175-ae7c41290de1/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": 0,
         "artifact_paths": "",
         "agent": {
           "id": "d48ed8c9-2112-406e-af11-8520faacba52",
-          "url": "https://api.buildbox.io/v1/accounts/hooroo/agents/d48ed8c9-2112-406e-af11-8520faacba52",
-          "name": "buildbox-agent-production-i-4fcec680.02"
+          "url": "https://api.buildkite.com/v1/accounts/hooroo/agents/d48ed8c9-2112-406e-af11-8520faacba52",
+          "name": "buildkite-agent-production-i-4fcec680.02"
         },
         "created_at": "2014-11-05 03:09:25 UTC",
         "scheduled_at": "2014-11-05 03:09:25 UTC",
@@ -420,8 +420,8 @@
         "type": "script",
         "name": "staging :airplane: ",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/8d9f13f0-1f5b-48c4-b1c2-eb0a6f84fde0/log",
-        "script_path": "buildbox/scripts/deploy",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/8d9f13f0-1f5b-48c4-b1c2-eb0a6f84fde0/log",
+        "script_path": "buildkite/scripts/deploy",
         "exit_status": null,
         "artifact_paths": "",
         "agent": null,
@@ -435,8 +435,8 @@
         "type": "script",
         "name": "assets_production",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e7fce9be-0fd0-46ca-a671-4347b2d962fd/log",
-        "script_path": "buildbox/scripts/assets_sync",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e7fce9be-0fd0-46ca-a671-4347b2d962fd/log",
+        "script_path": "buildkite/scripts/assets_sync",
         "exit_status": null,
         "artifact_paths": "",
         "agent": null,
@@ -453,8 +453,8 @@
         "type": "script",
         "name": "smoke :cloud:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/b93aefad-3c05-498d-b2fb-436257b1f051/log",
-        "script_path": "buildbox/scripts/rake",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/b93aefad-3c05-498d-b2fb-436257b1f051/log",
+        "script_path": "buildkite/scripts/rake",
         "exit_status": null,
         "artifact_paths": "screenshot_*.png",
         "agent": null,
@@ -471,8 +471,8 @@
         "type": "script",
         "name": "production :rocket:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/5a120a15-f789-4bdf-90de-41362284ebd8/log",
-        "script_path": "buildbox/scripts/deploy",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/5a120a15-f789-4bdf-90de-41362284ebd8/log",
+        "script_path": "buildkite/scripts/deploy",
         "exit_status": null,
         "artifact_paths": "",
         "agent": null,
@@ -489,8 +489,8 @@
         "type": "script",
         "name": "dr :stars:",
         "state": "passed",
-        "log_url": "https://api.buildbox.io/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e96b3be2-75f4-4203-a49d-3d29f7103967/log",
-        "script_path": "buildbox/scripts/deploy",
+        "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/e96b3be2-75f4-4203-a49d-3d29f7103967/log",
+        "script_path": "buildkite/scripts/deploy",
         "exit_status": null,
         "artifact_paths": "",
         "agent": null,

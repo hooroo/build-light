@@ -12,7 +12,7 @@ module BuildLight
     subject(:processor)     { described_class.new(config: config) }
 
     before do
-      config.ci = { name: 'Buildbox', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' }
+      config.ci = { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' }
       processor.stub_chain(:ci, :successful_builds, :length).and_return 2
       processor.stub_chain(:ci, :failed_builds, :length).and_return 2
       processor.stub(:set_light) { true }

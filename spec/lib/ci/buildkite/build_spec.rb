@@ -1,17 +1,17 @@
 require 'spec_helper'
-require 'build_light/ci/buildbox/build'
-require 'build_light/ci/buildbox/job'
+require 'build_light/ci/buildkite/build'
+require 'build_light/ci/buildkite/job'
 
 
 module CI
 
-  module Buildbox
+  module Buildkite
 
     describe Build do
 
-      let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildbox/build/failed_build.json") }
-      let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildbox/build/successful_build.json") }
-      let(:config)            { { name: 'Buildbox', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
+      let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
+      let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildkite/build/successful_build.json") }
+      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
       subject(:build)         { described_class.new build_name: 'hotels', config: config }
 
       before do
