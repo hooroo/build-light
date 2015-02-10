@@ -12,7 +12,7 @@ module CI
       let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
       let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildkite/build/successful_build.json") }
       let(:deploying_build)   { JSON.parse File.read("#{Fixtures.path}/buildkite/build/deploying_build.json") }
-      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd', deploy_script: 'buildkite/scripts/deploy' } }
+      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd', deploy_step: 'deploy to production :rocket:' } }
       subject(:build)         { described_class.new build_name: 'hotels', config: config }
 
       before do

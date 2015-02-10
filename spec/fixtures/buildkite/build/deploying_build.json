@@ -158,7 +158,7 @@
       {
         "id": "0b02d529-9c6d-425b-bdfe-827edec6dcb8",
         "type": "script",
-        "name": "production :rocket:",
+        "name": "Deploy to Production :rocket:",
         "state": "running",
         "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/420/jobs/0b02d529-9c6d-425b-bdfe-827edec6dcb8/log",
         "script_path": "buildkite/scripts/deploy",
@@ -305,7 +305,7 @@
       {
         "id": "5a120a15-f789-4bdf-90de-41362284ebd8",
         "type": "script",
-        "name": "production :rocket:",
+        "name": "Deploy to Production :rocket:",
         "state": "blocked_failed",
         "log_url": "https://api.buildkite.com/v1/accounts/hooroo/projects/hotels/builds/419/jobs/5a120a15-f789-4bdf-90de-41362284ebd8/log",
         "script_path": "buildkite/scripts/deploy",

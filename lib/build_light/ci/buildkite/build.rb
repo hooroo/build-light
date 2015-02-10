@@ -11,7 +11,7 @@ module CI
 
       include ::Logger
 
-      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch, :deploy_script
+      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch, :deploy_step
 
       URL = 'https://api.buildkite.com/v1'
 
@@ -19,7 +19,7 @@ module CI
         @name           = build_name
         @organisation   = config[:organisation]
         @branch         = config[:branch] || 'master'
-        @deploy_script  = config[:deploy_script]
+        @deploy_step    = config[:deploy_step]
         @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
         @build          = fetch_build
         logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
@@ -113,8 +113,8 @@ module CI
       end
 
       def is_being_deployed? build_jobs
-        return false unless deploy_script
-        build_jobs.any? { |job| job['script_path'] == deploy_script && job['state'] == 'running' }
+        return false unless deploy_step
+        build_jobs.any? { |job| !!(job['name'] =~ Regexp.new(deploy_step, Regexp::IGNORECASE)) && job['state'] == 'running' }
       end
 
       def api_request
