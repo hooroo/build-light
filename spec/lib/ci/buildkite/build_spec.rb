@@ -11,7 +11,8 @@ module CI
 
       let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
       let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildkite/build/successful_build.json") }
-      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
+      let(:deploying_build)   { JSON.parse File.read("#{Fixtures.path}/buildkite/build/deploying_build.json") }
+      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd', deploy_script: 'buildkite/scripts/deploy' } }
       subject(:build)         { described_class.new build_name: 'hotels', config: config }
 
       before do
@@ -78,6 +79,23 @@ module CI
 
         before do
           allow_any_instance_of(described_class).to receive(:api_request) { successful_build }
+        end
+
+        it "marks it as successful (#failure?) & (#success?)" do
+          expect(build.failure?).to eq false
+          expect(build.success?).to eq true
+        end
+
+        it "identifies no failed jobs" do
+          expect(build.failed_jobs.length).to eq 0
+        end
+
+      end
+
+      context "given a deploying build" do
+
+        before do
+          allow_any_instance_of(described_class).to receive(:api_request) { deploying_build }
         end
 
         it "marks it as successful (#failure?) & (#success?)" do

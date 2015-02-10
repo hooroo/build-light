@@ -11,13 +11,14 @@ module CI
       SUCCESS = 'passed'
       FAILURE = /failed/
       UNKNOWN = 'UNKNOWN'
+      RUNNING = 'running'
 
       attr_reader :culprits
 
       def initialize(job)
         @job                  = job
-        if job_is_valid?
-          @result             = job_result       || UNKNOWN
+        if is_valid?
+          @result             = job_result || UNKNOWN
           log_job
         else
           logger.warn "CI job is incomplete or invalid"
@@ -41,11 +42,15 @@ module CI
         true
       end
 
+      def running?
+        job_result == RUNNING
+      end
+
       private
 
       attr_reader :job, :result
 
-      def job_is_valid?
+      def is_valid?
         !job.nil?
       end
 

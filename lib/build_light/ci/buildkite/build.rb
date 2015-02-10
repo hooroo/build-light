@@ -11,18 +11,19 @@ module CI
 
       include ::Logger
 
-      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch
+      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch, :deploy_script
 
       URL = 'https://api.buildkite.com/v1'
 
       def initialize(build_name:, config:)
-        @name         = build_name
-        @organisation = config[:organisation]
-        @branch       = config[:branch] || 'master'
-        @api_suffix   = "accounts/#{organisation}/projects/#{name}/builds?api_key=#{config[:api_token]}&branch=#{branch}"
-        @build        = fetch_build
+        @name           = build_name
+        @organisation   = config[:organisation]
+        @branch         = config[:branch] || 'master'
+        @deploy_script  = config[:deploy_script]
+        @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
+        @build          = fetch_build
         logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
-        @culprits     = fetch_culprits
+        @culprits       = fetch_culprits
       end
 
       def success?
@@ -42,7 +43,7 @@ module CI
       end
 
       def failed_jobs
-        jobs.select { |job| job.failure? and job.enabled? }
+        jobs.select { |job| job.failure? && job.enabled? }
       end
 
       def unclaimed_jobs
@@ -106,7 +107,14 @@ module CI
       end
 
       def fetch_build
-        api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.detect{ | build | build['finished_at'] && build['state'] != 'canceled' }
+        api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.detect do | build |
+          is_being_deployed?(build['jobs']) || (!!build['finished_at'] && build['state'] != 'canceled')
+        end
+      end
+
+      def is_being_deployed? build_jobs
+        return false unless deploy_script
+        build_jobs.any? { |job| job['script_path'] == deploy_script && job['state'] == 'running' }
       end
 
       def api_request
@@ -121,7 +129,6 @@ module CI
         res = http.request(req)
 
         JSON.parse(res.body)
-        # JSON.parse(File.open('/Users/daniel/Desktop/jenkins3.json', 'r').readlines.first)
       end
 
     end
