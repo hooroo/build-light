@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "rspec", "~> 2.14"
   gem.add_development_dependency "awesome_print", "~> 1.2.0"
-  gem.add_development_dependency "pry-debugger"
+  gem.add_development_dependency "pry-byebug"
   gem.add_development_dependency "rake", "~> 10.3.2"
 
 end
