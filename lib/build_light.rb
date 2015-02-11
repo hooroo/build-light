@@ -34,7 +34,7 @@ module BuildLight
       @status_file          = File.expand_path(File.join('..', 'last_status'), __FILE__)
       @voice_command        = "mpg123"
       @sound_directories    = [ File.expand_path(File.join('..', 'sounds'), __FILE__) ]
-      @light_manager        = { name: "blinkee" }
+      @light_manager        = { name: "squinty" }
       @deploy_step          = nil
       @ci                   = nil
     end

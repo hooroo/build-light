@@ -1,4 +1,4 @@
-require 'blinkee'
+# require 'blinkee'
 require 'squinty'
 require 'yaml'
 

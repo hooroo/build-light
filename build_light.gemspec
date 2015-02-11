@@ -24,7 +24,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "netrc", "~> 0.8.0"
   gem.add_dependency "octokit", '~> 3.0'
   #should be inside the blinkee gemspec. TODO: Talk to Ash about it
-  gem.add_dependency "ruby-usb", '~> 0.2.1'
+  # gem.add_dependency "ruby-usb", '~> 0.2.1'
 
   gem.add_development_dependency "rspec", "~> 2.14"
   gem.add_development_dependency "awesome_print", "~> 1.2.0"
