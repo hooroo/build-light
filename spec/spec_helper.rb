@@ -1,4 +1,4 @@
-require 'pry-debugger'
+require 'pry-byebug'
 require 'awesome_print'
 require 'json'
 require 'build_light'
