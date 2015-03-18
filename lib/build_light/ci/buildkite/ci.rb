@@ -30,6 +30,10 @@ module CI
         builds.select { | build | build.failure? }
       end
 
+      def running_builds
+        builds.select { | build | build.running? }
+      end
+
       def has_no_build_failures?
         failed_builds.empty?
       end
@@ -37,6 +41,11 @@ module CI
       def has_build_failures?
         !has_no_build_failures?
       end
+
+      def build_in_progress?
+        running_builds.any?
+      end
+
 
       private
 

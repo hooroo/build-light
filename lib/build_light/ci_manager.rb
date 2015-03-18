@@ -24,6 +24,10 @@ module BuildLight
         end
     end
 
+    def activity
+      ci_class.build_in_progress? ? 'running' : 'idle'
+    end
+
     def successful_builds
       ci_class.successful_builds
     end

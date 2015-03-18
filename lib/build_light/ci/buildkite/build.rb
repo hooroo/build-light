@@ -11,7 +11,7 @@ module CI
 
       include ::Logger
 
-      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch, :deploy_step
+      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch
 
       URL = 'https://api.buildkite.com/v1'
 
@@ -19,7 +19,6 @@ module CI
         @name           = build_name
         @organisation   = config[:organisation]
         @branch         = config[:branch] || 'master'
-        @deploy_step    = config[:deploy_step]
         @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
         @build          = fetch_build
         logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
@@ -34,6 +33,10 @@ module CI
         !success?
       end
 
+      def running?
+        running_jobs.any?
+      end
+
       def jobs
         @jobs ||= assemble_jobs
       end
@@ -44,6 +47,10 @@ module CI
 
       def failed_jobs
         jobs.select { |job| job.failure? && job.enabled? }
+      end
+
+      def running_jobs
+        jobs.select { |job| job.running? }
       end
 
       def unclaimed_jobs
@@ -107,14 +114,7 @@ module CI
       end
 
       def fetch_build
-        api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.detect do | build |
-          is_being_deployed?(build['jobs']) || (!!build['finished_at'] && build['state'] != 'canceled')
-        end
-      end
-
-      def is_being_deployed? build_jobs
-        return false unless deploy_step
-        build_jobs.any? { |job| !!(job['name'] =~ Regexp.new(deploy_step, Regexp::IGNORECASE)) && job['state'] == 'running' }
+        api_request.sort_by { | b | Time.parse(b["created_at"]) }.reverse.first
       end
 
       def api_request

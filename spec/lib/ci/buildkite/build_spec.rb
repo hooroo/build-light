@@ -11,8 +11,8 @@ module CI
 
       let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
       let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildkite/build/successful_build.json") }
-      let(:deploying_build)   { JSON.parse File.read("#{Fixtures.path}/buildkite/build/deploying_build.json") }
-      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd', deploy_step: 'deploy to production :rocket:' } }
+      let(:running_build)     { JSON.parse File.read("#{Fixtures.path}/buildkite/build/running_build.json") }
+      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
       subject(:build)         { described_class.new build_name: 'hotels', config: config }
 
       before do
@@ -21,8 +21,8 @@ module CI
             sha: "aabbccddee",
             commit: {
               author: {
-                name: "Chris Rode",
-                email: "chris@hooroo.com",
+                name: "Joe Developer",
+                email: "joe@developer.com",
                 date: "2014-11-05 03:08:56 UTC"
               }
             }
@@ -36,7 +36,7 @@ module CI
           allow_any_instance_of(described_class).to receive(:api_request) { failed_build }
         end
 
-        it "identifies the last completed build (#build)" do
+        it "identifies the last build (#build)" do
           expect(build.build['number']).to eq 419
         end
 
@@ -57,7 +57,7 @@ module CI
 
         it "names and shames the culprits" do
           expect(build.culprits.length).to eq 1
-          expect(build.culprits.first).to eq "Chris Rode"
+          expect(build.culprits.first).to eq "Joe Developer"
         end
 
       end
@@ -71,6 +71,10 @@ module CI
         it "marks it as failed (#failure?) & (#success?)" do
           expect(build.failure?).to eq true
           expect(build.success?).to eq false
+        end
+
+        it "it doesn't identify it as running" do
+          expect(build.running?).to eq false
         end
 
       end
@@ -90,21 +94,25 @@ module CI
           expect(build.failed_jobs.length).to eq 0
         end
 
-      end
-
-      context "given a deploying build" do
-
-        before do
-          allow_any_instance_of(described_class).to receive(:api_request) { deploying_build }
+        it "it doesn't identify it as running" do
+          expect(build.running?).to eq false
         end
 
-        it "marks it as successful (#failure?) & (#success?)" do
+      end
+
+      context "given a running build" do
+
+        before do
+          allow_any_instance_of(described_class).to receive(:api_request) { running_build }
+        end
+
+        it "it identifies a partial success or failure state (#failure?) & (#success?)" do
           expect(build.failure?).to eq false
           expect(build.success?).to eq true
         end
 
-        it "identifies no failed jobs" do
-          expect(build.failed_jobs.length).to eq 0
+        it "it identifies it as running" do
+          expect(build.running?).to eq true
         end
 
       end
