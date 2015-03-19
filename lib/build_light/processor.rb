@@ -22,10 +22,10 @@ module BuildLight
         logger.info "Current Status: #{current_status}. Current Activity: #{current_activity}"
 
         update_streak_count
+        set_status new_status
 
         if build_state_has_changed?
           logger.info "Build state has changed."
-          set_status new_status
           set_light light_message
           announce_failure if build_has_failed?
         end
@@ -33,7 +33,7 @@ module BuildLight
         logger.info "Successful builds: #{ci.successful_builds.length} Failed builds: #{ci.failed_builds.length}"
 
       rescue StandardError => e
-        logger.error 'Setting light: off'
+        logger.error 'Setting light to: off'
         light.off!
         set_status 'off'
         raise e
