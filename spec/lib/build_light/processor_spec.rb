@@ -44,9 +44,12 @@ module BuildLight
 
         context "when there's no change in status" do
 
-          it "doesn't action the light or change the status" do
+          it "sets the status" do
+            expect(processor).to have_received :set_status
+          end
+
+          it "doesn't action the light" do
             expect(processor).to_not have_received :set_light
-            expect(processor).to_not have_received :set_status
             expect(processor).to_not have_received :announce_failure
           end
 
@@ -80,9 +83,13 @@ module BuildLight
 
         context "when there's no change in status" do
           let(:prior_activity)    { 'running' }
-          it "doesn't action the light or change the status" do
+
+          it "sets the status" do
+            expect(processor).to have_received :set_status
+          end
+
+          it "doesn't action the light" do
             expect(processor).to_not have_received :set_light
-            expect(processor).to_not have_received :set_status
             expect(processor).to_not have_received :announce_failure
           end
 
