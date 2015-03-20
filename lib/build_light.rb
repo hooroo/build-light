@@ -38,7 +38,7 @@ module BuildLight
       @voice_command        = "mpg123"
       @sound_directories    = [ File.expand_path(File.join('..', 'sounds'), __FILE__) ]
       @light_manager        = { name: "squinty" }
-      @greenfields_count    = 3360 #roughly a week
+      @greenfields_count    = 2000
       @ci                   = nil
     end
   end

@@ -21,7 +21,8 @@ module CI
         @branch         = config[:branch] || 'master'
         @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
         @build          = fetch_build
-        logger.info "Latest fully completed build for project '#{name}' is ##{build['number']}"
+        logger.info "Latest build for project '#{name}' is ##{build['number']}"
+        logger.info "Build '#{name}' building?: #{running?}"
         @culprits       = fetch_culprits
       end
 
