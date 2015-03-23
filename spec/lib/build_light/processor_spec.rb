@@ -8,6 +8,7 @@ module BuildLight
 
     let(:current_activity)    { 'idle' }
     let(:prior_activity)      { 'idle' }
+    let(:current_status)      { 'failure' }
     let(:prior_status)        { 'failure' }
     let(:streak)              { 10 }
     let(:status_information)  {  { 'prior_activity' => prior_activity, 'prior_status' => prior_status, 'count' => streak } }
@@ -34,7 +35,7 @@ module BuildLight
     describe "#update!" do
 
       before do
-        processor.stub_chain(:ci, :result).and_return "failure"
+        processor.stub_chain(:ci, :result).and_return current_status
         processor.stub_chain(:ci, :activity).and_return current_activity
         processor.stub(:status_information)  { status_information }
         processor.update!
@@ -44,7 +45,7 @@ module BuildLight
 
         context "when there's no change in status" do
 
-          it "sets the status" do
+          it "sets status information" do
             expect(processor).to have_received :set_status
           end
 
@@ -75,17 +76,37 @@ module BuildLight
 
         end
 
+        context "when there's a change in activity" do
+
+          let(:current_activity) { 'running' }
+
+          it "actions the light and changes the status" do
+            expect(processor).to have_received :set_light
+            expect(processor).to have_received :set_status
+          end
+
+          it "doesn't announce a failure" do
+            expect(processor).to_not have_received :announce_failure
+          end
+
+        end
+
       end
 
       context "when latest build is active (building)" do
 
         let(:current_activity) { 'running' }
 
-        context "when there's no change in status" do
+        context "when there's no change in activity" do
           let(:prior_activity)    { 'running' }
+          let(:current_status)    { 'success' }
 
-          it "sets the status" do
+          it "sets status information" do
             expect(processor).to have_received :set_status
+          end
+
+          it "does not change the prior status" do
+            expect(processor.send(:new_status)[:prior_status]).to eq prior_status
           end
 
           it "doesn't action the light" do
@@ -99,14 +120,19 @@ module BuildLight
 
         end
 
-        context "when there _is_ a change in status" do
+        context "when there _is_ a change in activity" do
 
           let(:prior_activity)    { 'idle' }
+          let(:current_status)    { 'success' }
 
           it "actions the light and changes the status" do
             expect(processor).to have_received :set_light
             expect(processor).to have_received :set_status
             expect(processor).to have_received :announce_failure
+          end
+
+          it "does not change the prior status" do
+            expect(processor.send(:new_status)[:prior_status]).to eq prior_status
           end
 
           it "sets the current streak to be the same as the prior one" do

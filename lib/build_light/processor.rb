@@ -51,7 +51,7 @@ module BuildLight
     attr_reader :light, :logger, :status_information, :sound_player, :config, :ci
 
     def build_state_has_changed?
-      (build_is_active? && !build_was_active?) || status_has_changed?
+      (build_is_active? && !build_was_active?) || (!build_is_active? && status_has_changed?)
     end
 
     def status_has_changed?
@@ -115,7 +115,7 @@ module BuildLight
     def new_status
       {
         prior_activity: current_activity,
-        prior_status: current_status,
+        prior_status: (build_is_active? ? prior_status : current_status),
         count: current_streak_count
       }
     end
