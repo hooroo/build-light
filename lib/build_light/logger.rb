@@ -1,5 +1,3 @@
-require 'logging'
-
 module Logger
 
   include Logging.globally

@@ -12,6 +12,7 @@ module CI
         @config = config
         @build_list = config[:builds]
         logger.info "Fetching build information for: #{build_list.join(', ')}"
+        logger.info "Successful builds: #{successful_builds.length} Failed builds: #{failed_builds.length}"
       end
 
       def builds

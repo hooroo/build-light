@@ -1,16 +1,19 @@
-require "awesome_print"
-require "pry"
+require 'awesome_print'
+require 'pry'
 
-require "json"
+require 'logging'
+require 'json'
+require 'squinty'
+require 'yaml'
 
-require "build_light/version"
-require "build_light/utilities/deep_hash"
-require "build_light/logger"
-require "build_light/errors"
-require "build_light/light_manager"
-require "build_light/ci_manager"
-require "build_light/sound_player"
-require "build_light/processor"
+require 'build_light/version'
+require 'build_light/utilities/deep_hash'
+require 'build_light/logger'
+require 'build_light/errors'
+require 'build_light/light_manager'
+require 'build_light/ci_manager'
+require 'build_light/sound_player'
+require 'build_light/processor'
 
 module BuildLight
 
