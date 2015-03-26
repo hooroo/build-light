@@ -2,12 +2,14 @@ module BuildLight
 
   class Processor
 
-    def initialize(logger: Logging, light_manager: LightManager, ci_auditor: CIAuditor, sound_player: SoundPlayer, config:)
+    attr_reader :light, :sound_player, :auditor
+
+    def initialize(light_manager: nil, ci_auditor: nil, sound_player: nil, logger: Logging, config:)
       @config         = config
       @logger         = logger.logger['BuildLight']
-      @light          = light_manager.light config.light_manager
-      @sound_player   = sound_player.new config
-      @auditor        = ci_auditor.new(config.status_file)
+      @light          = light_manager || LightManager.light(config.light_manager)
+      @sound_player   = sound_player  || SoundPlayer.new(config)
+      @auditor        = ci_auditor    || CIAuditor.new(config)
     end
 
     def update!
@@ -15,14 +17,12 @@ module BuildLight
         auditor.update!
 
         if auditor.light_needs_to_change?
-          update_light!
+          update_light!(light_message)
           make_announcement
         end
 
       rescue StandardError => e
-        logger.error 'Setting light to: off'
-        light.off!
-        set_status 'off'
+        update_light!('warning')
         raise e
       end
 
@@ -30,11 +30,11 @@ module BuildLight
 
     private
 
-    attr_reader :light, :logger, :sound_player, :config
+    attr_reader :logger, :config
 
-    def update_light!
-      logger.info "Setting light to: #{light_message}"
-      light.__send__("#{light_message}!")
+    def update_light! message
+      logger.info "Setting light to: #{message}"
+      light.__send__("#{message}!")
     end
 
     def light_message

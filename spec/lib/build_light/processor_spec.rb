@@ -1,150 +1,66 @@
 require 'spec_helper'
-require 'build_light'
-require 'build_light/processor'
 
 module BuildLight
 
   describe Processor do
 
-    let(:current_activity)    { 'idle' }
-    let(:prior_activity)      { 'idle' }
-    let(:current_status)      { 'failure' }
-    let(:prior_status)        { 'failure' }
-    let(:streak)              { 10 }
-    let(:status_information)  {  { 'prior_activity' => prior_activity, 'prior_status' => prior_status, 'count' => streak } }
-
-    let(:config)              { Configuration.new }
-    let(:ci)                  { double(CIManager.new(config.ci)) }
-    subject(:processor)       { described_class.new(config: config) }
-
-    before do
-      config.ci = { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' }
-      processor.stub_chain(:ci, :successful_builds, :length).and_return 2
-      processor.stub_chain(:ci, :failed_builds, :length).and_return 2
-      processor.stub(:set_light) { true }
-      processor.stub(:set_status) { true }
-      processor.stub(:announce_failure) { true }
-    end
+    let(:config)                  { Configuration.new }
+    let(:light_needs_to_change?)  { false }
+    let(:auditor)                 { OpenStruct.new( :new => true, :update! => true, :light_needs_to_change? => light_needs_to_change? ) }
+    subject(:processor)           { described_class.new(config: config, ci_auditor: auditor) }
 
     describe "#new" do
-      it "sets the current streak counter to zero" do
-        expect(processor.current_streak_count).to eq 0
+      it "receives an instance of the light manager" do
+        expect(subject.light).to respond_to :success!
       end
+
+      it "receives an instance of the sound manager" do
+        expect(processor.sound_player).to respond_to :play
+      end
+
     end
 
     describe "#update!" do
 
       before do
-        processor.stub_chain(:ci, :result).and_return current_status
-        processor.stub_chain(:ci, :activity).and_return current_activity
-        processor.stub(:status_information)  { status_information }
-        processor.update!
+        allow(auditor).to receive(:update!)
+        allow(subject).to receive(:make_announcement)
+        allow(subject).to receive(:update_light!)
+        subject.update!
       end
 
-      context "when latest build is idle (not building)" do
+      it "updates the build auditor" do
+        expect(subject.auditor).to have_received :update!
+      end
 
-        context "when there's no change in status" do
+      context "when auditor requires no change in light" do
 
-          it "sets status information" do
-            expect(processor).to have_received :set_status
-          end
-
-          it "doesn't action the light" do
-            expect(processor).to_not have_received :set_light
-            expect(processor).to_not have_received :announce_failure
-          end
-
-          it "increments the prior status' streak count of builds on a row" do
-            expect(processor.current_streak_count).to eq (streak + 1)
-          end
-
+        it "doesn't make an announcement" do
+          expect(subject).to_not have_received :make_announcement
         end
 
-        context "when there _is_ a change in status" do
-
-          let(:prior_status) { "success" }
-
-          it "actions the light and changes the status" do
-            expect(processor).to have_received :set_light
-            expect(processor).to have_received :set_status
-            expect(processor).to have_received :announce_failure
-          end
-
-          it "resets the streak count of builds on a row to 1" do
-            expect(processor.current_streak_count).to eq 1
-          end
-
-        end
-
-        context "when there's a change in activity" do
-
-          let(:current_activity) { 'running' }
-
-          it "actions the light and changes the status" do
-            expect(processor).to have_received :set_light
-            expect(processor).to have_received :set_status
-          end
-
-          it "doesn't announce a failure" do
-            expect(processor).to_not have_received :announce_failure
-          end
-
+        it "doesn't update the light" do
+          expect(subject).to_not have_received :update_light!
         end
 
       end
 
-      context "when latest build is active (building)" do
+      context "when auditor does require a change in light" do
 
-        let(:current_activity) { 'running' }
+        let(:light_needs_to_change?) { true }
 
-        context "when there's no change in activity" do
-          let(:prior_activity)    { 'running' }
-          let(:current_status)    { 'success' }
-
-          it "sets status information" do
-            expect(processor).to have_received :set_status
-          end
-
-          it "does not change the prior status" do
-            expect(processor.send(:new_status)[:prior_status]).to eq prior_status
-          end
-
-          it "doesn't action the light" do
-            expect(processor).to_not have_received :set_light
-            expect(processor).to_not have_received :announce_failure
-          end
-
-          it "sets the current streak to be the same as the prior one" do
-            expect(processor.current_streak_count).to eq streak
-          end
-
+        it "makes an announcement" do
+          expect(subject).to have_received :make_announcement
         end
 
-        context "when there _is_ a change in activity" do
-
-          let(:prior_activity)    { 'idle' }
-          let(:current_status)    { 'success' }
-
-          it "actions the light and changes the status" do
-            expect(processor).to have_received :set_light
-            expect(processor).to have_received :set_status
-            expect(processor).to have_received :announce_failure
-          end
-
-          it "does not change the prior status" do
-            expect(processor.send(:new_status)[:prior_status]).to eq prior_status
-          end
-
-          it "sets the current streak to be the same as the prior one" do
-            expect(processor.current_streak_count).to eq streak
-          end
-
+        it "updates the light" do
+          expect(subject).to have_received :update_light!
         end
 
       end
 
     end
 
-
   end
+
 end
