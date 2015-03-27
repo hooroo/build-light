@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-require 'build_light'
-
-result = BuildLight::Processor.new()
-
-exit(1) unless result

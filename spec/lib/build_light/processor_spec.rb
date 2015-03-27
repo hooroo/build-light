@@ -7,7 +7,8 @@ module BuildLight
     let(:config)                  { Configuration.new }
     let(:light_needs_to_change?)  { false }
     let(:auditor)                 { OpenStruct.new( :new => true, :update! => true, :light_needs_to_change? => light_needs_to_change? ) }
-    subject(:processor)           { described_class.new(config: config, ci_auditor: auditor) }
+    let(:sound_manager)           { OpenStruct.new( :failed_builds => [], :make_announcement => true ) }
+    subject(:processor)           { described_class.new(config: config, ci_auditor: auditor, sound_manager: sound_manager) }
 
     describe "#new" do
       it "receives an instance of the light manager" do
@@ -15,7 +16,7 @@ module BuildLight
       end
 
       it "receives an instance of the sound manager" do
-        expect(processor.sound_player).to respond_to :play
+        # expect(processor.sound_manager).to respond_to :play
       end
 
     end
@@ -24,7 +25,7 @@ module BuildLight
 
       before do
         allow(auditor).to receive(:update!)
-        allow(subject).to receive(:make_announcement)
+        allow(sound_manager).to receive(:make_announcement)
         allow(subject).to receive(:update_light!)
         subject.update!
       end
@@ -36,7 +37,7 @@ module BuildLight
       context "when auditor requires no change in light" do
 
         it "doesn't make an announcement" do
-          expect(subject).to_not have_received :make_announcement
+          expect(subject.sound_manager).to_not have_received :make_announcement
         end
 
         it "doesn't update the light" do
@@ -50,7 +51,7 @@ module BuildLight
         let(:light_needs_to_change?) { true }
 
         it "makes an announcement" do
-          expect(subject).to have_received :make_announcement
+          expect(subject.sound_manager).to have_received :make_announcement
         end
 
         it "updates the light" do

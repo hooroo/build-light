@@ -5,7 +5,8 @@ module BuildLight
   describe CIAuditor do
 
     let(:config)                { Configuration.new }
-    let(:ci)                    { OpenStruct.new(result: current_state, activity: current_activity) }
+    let(:ci)                    { OpenStruct.new(result: current_state, activity: current_activity, failed_builds: failed_builds) }
+    let(:failed_builds)         { ['build', 'another'] }
     let(:prior_activity)        { 'idle' }
     let(:current_activity)      { 'idle' }
     let(:prior_state)           { 'failure' }
@@ -407,6 +408,14 @@ module BuildLight
 
         end
 
+      end
+
+    end
+
+    describe "#failed_builds" do
+
+      it "reflects failed builds from CI" do
+        expect(auditor.failed_builds).to eq failed_builds
       end
 
     end

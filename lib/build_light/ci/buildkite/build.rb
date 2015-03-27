@@ -128,8 +128,11 @@ module CI
         req = Net::HTTP::Get.new(uri.request_uri)
 
         res = http.request(req)
-
         JSON.parse(res.body)
+
+      rescue SocketError
+        raise BuildLight::CIApiRequestFailed
+        logger.error "BuildKite API Request failed"
       end
 
     end

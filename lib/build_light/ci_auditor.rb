@@ -43,6 +43,10 @@ module BuildLight
       build_is_active? ? prior_state : current_state
     end
 
+    def failed_builds
+      ci.failed_builds
+    end
+
     private
 
     attr_reader :persistor, :ci, :prior
@@ -109,10 +113,6 @@ module BuildLight
 
     def prior_activity
       prior['activity']
-    end
-
-    def failed_builds
-      ci.failed_builds
     end
 
     def prior

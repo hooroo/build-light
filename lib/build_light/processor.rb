@@ -2,14 +2,14 @@ module BuildLight
 
   class Processor
 
-    attr_reader :light, :sound_player, :auditor
+    attr_reader :light, :sound_manager, :auditor
 
-    def initialize(light_manager: nil, ci_auditor: nil, sound_player: nil, logger: Logging, config:)
+    def initialize(light_manager: nil, ci_auditor: nil, sound_manager: nil, logger: Logging, config:)
       @config         = config
       @logger         = logger.logger['BuildLight']
-      @light          = light_manager || LightManager.light(config.light_manager)
-      @sound_player   = sound_player  || SoundPlayer.new(config)
-      @auditor        = ci_auditor    || CIAuditor.new(config)
+      @light          = light_manager  || LightManager.light(config.light_manager)
+      @auditor        = ci_auditor     || CIAuditor.new(config)
+      @sound_manager  = sound_manager  || SoundManager.new(config: config, auditor: auditor)
     end
 
     def update!
@@ -18,7 +18,7 @@ module BuildLight
 
         if auditor.light_needs_to_change?
           update_light!(light_message)
-          make_announcement
+          sound_manager.make_announcement
         end
 
       rescue StandardError => e
@@ -45,55 +45,6 @@ module BuildLight
         "happy"
       else
         auditor.current_state
-      end
-    end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def failed_builds
-      @failed_builds ||= auditor.failed_builds
-    end
-
-    def announce_dramatic_notice
-      logger.info "Playing dramatic notice to announce build failure"
-      sound_player.play([ sound_player.get_random_file('build_fails') ])
-    end
-
-    def announce_failed_build_name name
-      sound_player.play([
-        sound_player.get_file('announcements', 'build'),
-        sound_player.get_file('builds', name.gsub('-', ' ')),
-        sound_player.get_file('announcements', 'failed')
-      ])
-    end
-
-    def announce_culprits build
-      sound_player.play([
-        sound_player.get_file('numbers', build.culprits.size),
-        sound_player.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
-        sound_player.get_file('announcements', 'drumroll')
-      ])
-      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.get_file('committers', element) })
-    end
-
-    def make_announcement
-
-      announce_dramatic_notice
-      failed_builds.each do | failed_build |
-        announce_failed_build_name failed_build.name
-        announce_culprits(failed_build) if failed_build.culprits.size > 0
-        `sleep 2`
       end
     end
 
