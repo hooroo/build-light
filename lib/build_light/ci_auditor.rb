@@ -31,6 +31,10 @@ module BuildLight
       build_has_succeeded? && streak >= greenfields
     end
 
+    def first_greenfields?
+      streak == greenfields
+    end
+
     def current_state
       ci.result
     end

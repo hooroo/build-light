@@ -11,16 +11,24 @@ module BuildLight
     end
 
     def make_announcement
-      true
-      # case
-      # when auditor.
-
-      # end
+      case
+      when auditor.build_has_been_broken?
+        announce_breakage
+      when first_greenfields?
+        announce_first_greenfields
+      when auditor.build_has_been_fixed?
+        announce_fix
+      else
+        announce_check
+      end
     end
 
-    def announce_failure
+    def announce_fix
+    end
+
+    def announce_breakage
       announce_dramatic_notice
-      audotor.failed_builds.each do | failed_build |
+      auditor.failed_builds.each do | failed_build |
         announce_failed_build_name(failed_build.name)
         announce_culprits(failed_build) if failed_build.culprits.size > 0
         `sleep 2`

@@ -514,6 +514,38 @@ module BuildLight
 
     end
 
+    describe "#first_greenfields?" do
+
+      context "with a lower-than-greenfields streak" do
+
+        it "returns false" do
+          expect(auditor.first_greenfields?).to be false
+        end
+
+      end
+
+      context "with a greater-than-greenfields streak" do
+
+        let(:streak) { 696969 }
+
+        it "returns false" do
+          expect(auditor.first_greenfields?).to be false
+        end
+
+      end
+
+      context "with a the exact value of greenfields" do
+
+        let(:streak) { config.greenfields }
+
+        it "returns true" do
+          expect(auditor.first_greenfields?).to be true
+        end
+
+      end
+
+    end
+
   end
 
 end
