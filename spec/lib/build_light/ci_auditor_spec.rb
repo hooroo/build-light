@@ -420,6 +420,100 @@ module BuildLight
 
     end
 
+    describe "#build_has_been_broken?" do
+
+      let(:current_state) { 'failure' }
+      let(:prior_state)   { 'success' }
+
+      context "when not building in in-between checks" do
+
+        let(:current_activity) { 'idle' }
+
+        it "returns true" do
+          expect(auditor.build_has_been_broken?).to be true
+        end
+
+      end
+
+      context "when building in in-between checks" do
+
+        let(:current_activity) { 'running' }
+
+        it "returns true" do
+          expect(auditor.build_has_been_broken?).to be true
+        end
+
+      end
+
+      context "when it hastn't been broken" do
+        let(:current_state) { 'success' }
+        let(:prior_state)   { 'success' }
+
+        it "returns false" do
+          expect(auditor.build_has_been_broken?).to be false
+        end
+
+      end
+
+      context "when it was already broken" do
+        let(:current_state) { 'failure' }
+        let(:prior_state)   { 'failure' }
+
+        it "returns false" do
+          expect(auditor.build_has_been_broken?).to be false
+        end
+
+      end
+
+    end
+
+    describe "#build_has_been_fixed?" do
+
+      let(:prior_state) { 'failure' }
+      let(:current_state)   { 'success' }
+
+      context "when not building in in-between checks" do
+
+        let(:current_activity) { 'idle' }
+
+        it "returns true" do
+          expect(auditor.build_has_been_fixed?).to be true
+        end
+
+      end
+
+      context "when building in in-between checks" do
+
+        let(:current_activity) { 'running' }
+
+        it "returns true" do
+          expect(auditor.build_has_been_fixed?).to be true
+        end
+
+      end
+
+      context "when it hastn't been fixed" do
+        let(:current_state) { 'failure`' }
+        let(:prior_state)   { 'failure`' }
+
+        it "returns false" do
+          expect(auditor.build_has_been_fixed?).to be false
+        end
+
+      end
+
+      context "when it was already fixed" do
+        let(:current_state) { 'success' }
+        let(:prior_state)   { 'success' }
+
+        it "returns false" do
+          expect(auditor.build_has_been_broken?).to be false
+        end
+
+      end
+
+    end
+
   end
 
 end

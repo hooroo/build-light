@@ -47,12 +47,20 @@ module BuildLight
       ci.failed_builds
     end
 
+    def build_has_been_broken?
+      build_has_failed? && build_had_succeeded?
+    end
+
+    def build_has_been_fixed?
+      build_has_succeeded? && build_had_failed?
+    end
+
     private
 
     attr_reader :persistor, :ci, :prior
 
     def state_has_changed?
-      (build_has_failed? && build_had_succeeded?) || (build_has_succeeded? && build_had_failed?)
+      build_has_been_broken? || build_has_been_fixed?
     end
 
     def activity_has_changed?
