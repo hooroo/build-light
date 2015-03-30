@@ -40,9 +40,9 @@ module BuildLight
 
     def announce_breakage(sleep: true)
       dramatic_fail
-      auditor.failed_builds.each do | failed_build |
-        announce_failed_build_name(failed_build.name)
-        announce_culprits(failed_build) if failed_build.culprits.size > 0
+      auditor.failed_builds.each do | build |
+        announce_failed_build_name(build.name)
+        announce_culprits( culprits(build) )
         `sleep 2` if sleep
       end
     end
@@ -63,13 +63,23 @@ module BuildLight
       ])
     end
 
-    def announce_culprits build
-      sound_player.play([
-        sound_player.file('numbers', build.culprits.size),
-        sound_player.file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
-        sound_player.file('announcements', 'drumroll')
-      ])
-      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.file('committers', element) })
+    def announce_culprits culprits
+       if culprits.any?
+        sound_player.play([
+          sound_player.file('numbers', culprits.size),
+          sound_player.file('announcements', (one_culprit?(culprits) ? "committer" : "committers") ),
+          sound_player.file('announcements', 'drumroll')
+        ])
+        sound_player.play(culprits.inject([]) { | result, element | result << sound_player.file('committers', element) })
+      end
+    end
+
+    def culprits build
+      build.culprits.any? ? build.culprits : []
+    end
+
+    def one_culprit? culprits
+      culprits.size == 1
     end
 
   end

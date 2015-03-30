@@ -160,8 +160,8 @@ module BuildLight
       end
 
       it "names and shames culprits, if any" do
-        expect(subject).to receive(:announce_culprits) # culprits specified
-        expect(subject).to_not receive(:announce_culprits) # culprits empty
+        expect(subject).to receive(:announce_culprits)
+        expect(subject).to receive(:announce_culprits)
       end
 
     end
