@@ -4,18 +4,21 @@ module BuildLight
 
     include ::Logger
 
+    attr_reader :sound_player
+
     def initialize config: config, auditor: auditor, sound_player: nil
-      @config       = config
-      @auditor      = auditor
-      @sound_player = sound_player || SoundPlayer.new(config)
+      @config           = config
+      @auditor          = auditor
+      @failed_builds    = auditor.failed_builds
+      @sound_player     = sound_player || SoundPlayer.new(config)
     end
 
     def make_announcement
       case
       when auditor.build_has_been_broken?
         announce_breakage
-      when first_greenfields?
-        announce_first_greenfields
+      when auditor.first_greenfields?
+        announce_greenfields
       when auditor.build_has_been_fixed?
         announce_fix
       else
@@ -27,17 +30,28 @@ module BuildLight
       sound_player.play([ sound_player.file('announcements', 'fixed') ])
     end
 
-    def announce_breakage
-      announce_dramatic_notice
+    def announce_greenfields
+      sound_player.play([ sound_player.file('announcements', 'greenfields') ])
+    end
+
+    def announce_check
+      sound_player.play([ sound_player.file('announcements', 'check') ])
+    end
+
+    def announce_breakage(sleep: true)
+      dramatic_fail
       auditor.failed_builds.each do | failed_build |
         announce_failed_build_name(failed_build.name)
         announce_culprits(failed_build) if failed_build.culprits.size > 0
-        `sleep 2`
+        `sleep 2` if sleep
       end
     end
 
-    def announce_dramatic_notice
-      logger.info "Playing dramatic notice to announce build failure"
+    private
+
+    attr_reader :config, :auditor
+
+    def dramatic_fail
       sound_player.play([ sound_player.random_file('build_fails') ])
     end
 
@@ -57,11 +71,6 @@ module BuildLight
       ])
       sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.file('committers', element) })
     end
-
-
-    private
-
-    attr_reader :config, :sound_player, :auditor
 
   end
 
