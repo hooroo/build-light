@@ -24,6 +24,7 @@ module BuildLight
     end
 
     def announce_fix
+      sound_player.play([ sound_player.file('announcements', 'fixed') ])
     end
 
     def announce_breakage
@@ -37,24 +38,24 @@ module BuildLight
 
     def announce_dramatic_notice
       logger.info "Playing dramatic notice to announce build failure"
-      sound_player.play([ sound_player.get_random_file('build_fails') ])
+      sound_player.play([ sound_player.random_file('build_fails') ])
     end
 
     def announce_failed_build_name name
       sound_player.play([
-        sound_player.get_file('announcements', 'build'),
-        sound_player.get_file('builds', name.gsub('-', ' ')),
-        sound_player.get_file('announcements', 'failed')
+        sound_player.file('announcements', 'build'),
+        sound_player.file('builds', name.gsub('-', ' ')),
+        sound_player.file('announcements', 'failed')
       ])
     end
 
     def announce_culprits build
       sound_player.play([
-        sound_player.get_file('numbers', build.culprits.size),
-        sound_player.get_file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
-        sound_player.get_file('announcements', 'drumroll')
+        sound_player.file('numbers', build.culprits.size),
+        sound_player.file('announcements', build.culprits.size == 1 ? "committer" : "committers"),
+        sound_player.file('announcements', 'drumroll')
       ])
-      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.get_file('committers', element) })
+      sound_player.play(build.culprits.inject([]) { | result, element | result << sound_player.file('committers', element) })
     end
 
 

@@ -9,11 +9,11 @@ module BuildLight
       @config = config
     end
 
-    def get_file type, command
+    def file type, command
       find_file type, command
     end
 
-    def get_random_file type
+    def random_file type
       all_files(type).sample
     end
 
@@ -23,7 +23,7 @@ module BuildLight
         if file_location && File.exists?(file_location)
           collected_commands << file_location
         else #Missing MP3 file, fall back to unknown
-          collected_commands << get_file('announcements', 'unknown')
+          collected_commands << file('announcements', 'unknown')
         end
       end
       make_announcements(collected_commands)

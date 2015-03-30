@@ -12,9 +12,9 @@ module BuildLight
     subject(:sound_player)  { described_class.new(config) }
 
 
-    describe "#get_file" do
+    describe "#file" do
       it 'finds a file from the specified sound directories' do
-        file = sound_player.get_file( file_type, file_name )
+        file = sound_player.file( file_type, file_name )
 
         expect( file ).to eq "#{local_path}/sounds/build_fails/hell_naw.mp3"
 
@@ -31,9 +31,9 @@ module BuildLight
 
       # let(:commands) {
       #   [
-      #     sound_player.get_file('announcements', 'build'),
-      #     sound_player.get_file('announcements', 'unknown'),
-      #     sound_player.get_file('announcements', 'failed')
+      #     sound_player.file('announcements', 'build'),
+      #     sound_player.file('announcements', 'unknown'),
+      #     sound_player.file('announcements', 'failed')
       #   ]
       # }
 
