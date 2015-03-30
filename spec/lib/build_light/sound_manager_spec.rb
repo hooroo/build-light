@@ -7,11 +7,11 @@ module BuildLight
 
     def initialize; end
 
-    def random_file(file); return true; end
+    def random_clip(clip); return true; end
 
     def play(args); return true; end
 
-    def file(arg1, arg2); return true; end
+    def clip(arg1, arg2); return true; end
   end
 
   describe SoundManager do
@@ -112,7 +112,7 @@ module BuildLight
       end
 
       it "plays an announcement of a fix" do
-        expect(subject.sound_player).to receive(:file).with('announcements', 'fixed')
+        expect(subject.sound_player).to receive(:clip).with('announcements', 'fixed')
       end
 
     end
@@ -124,7 +124,7 @@ module BuildLight
       end
 
       it "plays an announcement of a first greenfields state" do
-        expect(subject.sound_player).to receive(:file).with('announcements', 'greenfields')
+        expect(subject.sound_player).to receive(:clip).with('announcements', 'greenfields')
       end
 
     end
@@ -136,7 +136,7 @@ module BuildLight
       end
 
       it "plays an announcement of a first greenfields state" do
-        expect(subject.sound_player).to receive(:file).with('announcements', 'check')
+        expect(subject.sound_player).to receive(:clip).with('announcements', 'check')
       end
 
     end
@@ -151,7 +151,7 @@ module BuildLight
       end
 
       it "plays a random breakage sound" do
-        expect(subject.sound_player).to receive(:random_file).with('build_fails')
+        expect(subject.sound_player).to receive(:random_clip).with('build_fails')
       end
 
       it "details every broken build" do

@@ -14,7 +14,7 @@ module BuildLight
 
     describe "#file" do
       it 'finds a file from the specified sound directories' do
-        file = sound_player.file( file_type, file_name )
+        file = sound_player.clip( file_type, file_name )
 
         expect( file ).to eq "#{local_path}/sounds/build_fails/hell_naw.mp3"
 
@@ -31,9 +31,9 @@ module BuildLight
 
       # let(:commands) {
       #   [
-      #     sound_player.file('announcements', 'build'),
-      #     sound_player.file('announcements', 'unknown'),
-      #     sound_player.file('announcements', 'failed')
+      #     sound_player.clip('announcements', 'build'),
+      #     sound_player.clip('announcements', 'unknown'),
+      #     sound_player.clip('announcements', 'failed')
       #   ]
       # }
 

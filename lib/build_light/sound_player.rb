@@ -9,11 +9,11 @@ module BuildLight
       @config = config
     end
 
-    def file type, command
+    def clip type, command
       find_file type, command
     end
 
-    def random_file type
+    def random_clip type
       all_files(type).sample
     end
 

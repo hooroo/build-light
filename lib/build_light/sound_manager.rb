@@ -27,15 +27,15 @@ module BuildLight
     end
 
     def announce_fix
-      sound_player.play([ sound_player.file('announcements', 'fixed') ])
+      sound_player.play([ sound_player.clip('announcements', 'fixed') ])
     end
 
     def announce_greenfields
-      sound_player.play([ sound_player.file('announcements', 'greenfields') ])
+      sound_player.play([ sound_player.clip('announcements', 'greenfields') ])
     end
 
     def announce_check
-      sound_player.play([ sound_player.file('announcements', 'check') ])
+      sound_player.play([ sound_player.clip('announcements', 'check') ])
     end
 
     def announce_breakage(sleep: true)
@@ -52,25 +52,25 @@ module BuildLight
     attr_reader :config, :auditor
 
     def dramatic_fail
-      sound_player.play([ sound_player.random_file('build_fails') ])
+      sound_player.play([ sound_player.random_clip('build_fails') ])
     end
 
     def announce_failed_build_name name
       sound_player.play([
-        sound_player.file('announcements', 'build'),
-        sound_player.file('builds', name.gsub('-', ' ')),
-        sound_player.file('announcements', 'failed')
+        sound_player.clip('announcements', 'build'),
+        sound_player.clip('builds', name.gsub('-', ' ')),
+        sound_player.clip('announcements', 'failed')
       ])
     end
 
     def announce_culprits culprits
        if culprits.any?
         sound_player.play([
-          sound_player.file('numbers', culprits.size),
-          sound_player.file('announcements', (one_culprit?(culprits) ? "committer" : "committers") ),
-          sound_player.file('announcements', 'drumroll')
+          sound_player.clip('numbers', culprits.size),
+          sound_player.clip('announcements', (one_culprit?(culprits) ? "committer" : "committers") ),
+          sound_player.clip('announcements', 'drumroll')
         ])
-        sound_player.play(culprits.inject([]) { | result, element | result << sound_player.file('committers', element) })
+        sound_player.play(culprits.inject([]) { | result, element | result << sound_player.clip('committers', element) })
       end
     end
 
