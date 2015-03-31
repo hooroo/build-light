@@ -18,5 +18,3 @@ test/version_tmp
 tmp
 log/*.log
 development.log*
-last_status
-last_status.json

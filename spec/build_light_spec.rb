@@ -14,7 +14,7 @@ end
 #                                 name: 'Buildkite',
 #                                 organisation: 'hooroo',
 #                                 builds: [ 'hotels', 'flightbookings', 'flightbooking-events', 'reservations' ],
-#                                 api_token: 'f70cf28a88ae9e2ad8db8b1404272dcabee64149'
+#                                 api_token: ''
 #                               }
 #   config.light_manager      = { name: "squinty" }
 #   config.greenfields        = 3000
