@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/hooroo/squinty.git
-  revision: 15ce4263848ad1d2cbd90c8462e89fba0e20aa4c
-  ref: 15ce4263848ad1d2cbd90c8462e89fba0e20aa4c
+  revision: 2132e1afc585420491fc8ff2354149b54d6ad972
+  ref: 2132e1afc585420491fc8ff2354149b54d6ad972
   specs:
     squinty (0.0.2)
       rubyserial (>= 0.1.2)

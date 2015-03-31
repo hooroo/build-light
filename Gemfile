@@ -4,4 +4,4 @@ source 'https://rubygems.org'
 gemspec
 
 # override gemspec with our own repo
-gem "squinty", github: "hooroo/squinty", ref: "15ce4263848ad1d2cbd90c8462e89fba0e20aa4c"
+gem "squinty", github: "hooroo/squinty", ref: "2132e1afc585420491fc8ff2354149b54d6ad972"
