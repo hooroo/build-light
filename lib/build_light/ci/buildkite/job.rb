@@ -11,7 +11,7 @@ module CI
       SUCCESS = 'passed'
       FAILURE = /failed/
       UNKNOWN = 'UNKNOWN'
-      RUNNING = 'running'
+      RUNNING = /running|assigned/
 
       attr_reader :culprits
 
@@ -43,7 +43,7 @@ module CI
       end
 
       def running?
-        job_result == RUNNING
+        job_result =~ RUNNING
       end
 
       private

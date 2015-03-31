@@ -439,8 +439,9 @@ module BuildLight
 
         let(:current_activity) { 'running' }
 
-        it "returns true" do
-          expect(auditor.build_has_been_broken?).to be true
+        it "returns false" do
+          # we do not want a premature announcement
+          expect(auditor.build_has_been_broken?).to be false
         end
 
       end

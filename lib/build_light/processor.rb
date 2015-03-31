@@ -39,7 +39,7 @@ module BuildLight
       when auditor.build_is_active?
         "running"
       when auditor.greenfields?
-        "happy"
+        "rainbow"
       else
         auditor.current_state
       end

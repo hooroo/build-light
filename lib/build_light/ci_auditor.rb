@@ -52,7 +52,7 @@ module BuildLight
     end
 
     def build_has_been_broken?
-      build_has_failed? && build_had_succeeded?
+      build_has_failed? && build_had_succeeded? && build_is_idle?
     end
 
     def build_has_been_fixed?
