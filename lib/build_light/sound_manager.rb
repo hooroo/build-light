@@ -27,19 +27,27 @@ module BuildLight
     end
 
     def announce_fix
-      sound_player.play([ sound_player.clip('announcements', 'fixed') ])
+      logger.info "Sound clip: fix"
+      sound_player.play([ sound_player.random_clip('build_fixes') ])
     end
 
     def announce_greenfields
-      sound_player.play([ sound_player.clip('announcements', 'greenfields') ])
+      logger.info "Sound clip: greenfields"
+      sound_player.play([ sound_player.random_clip('greenfields') ])
     end
 
     def announce_check
+      logger.info "Sound clip: check"
       sound_player.play([ sound_player.clip('announcements', 'check') ])
     end
 
+    def announce_fail
+      logger.info "Sound clip: fail"
+      sound_player.play([ sound_player.random_clip('build_fails') ])
+    end
+
     def announce_breakage(sleep: true)
-      dramatic_fail
+      announce_fail
       auditor.failed_builds.each do | build |
         announce_failed_build_name(build.name)
         announce_culprits( culprits(build) )
@@ -47,13 +55,10 @@ module BuildLight
       end
     end
 
+
     private
 
     attr_reader :config, :auditor
-
-    def dramatic_fail
-      sound_player.play([ sound_player.random_clip('build_fails') ])
-    end
 
     def announce_failed_build_name name
       sound_player.play([

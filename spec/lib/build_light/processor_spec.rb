@@ -16,7 +16,7 @@ module BuildLight
       end
 
       it "receives an instance of the sound manager" do
-        # expect(processor.sound_manager).to respond_to :play
+        expect(processor.sound_manager).to respond_to :make_announcement
       end
 
     end

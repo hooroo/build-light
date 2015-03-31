@@ -112,7 +112,7 @@ module BuildLight
       end
 
       it "plays an announcement of a fix" do
-        expect(subject.sound_player).to receive(:clip).with('announcements', 'fixed')
+        expect(subject.sound_player).to receive(:random_clip).with('build_fixes')
       end
 
     end
@@ -124,7 +124,7 @@ module BuildLight
       end
 
       it "plays an announcement of a first greenfields state" do
-        expect(subject.sound_player).to receive(:clip).with('announcements', 'greenfields')
+        expect(subject.sound_player).to receive(:random_clip).with('greenfields')
       end
 
     end
@@ -141,6 +141,18 @@ module BuildLight
 
     end
 
+    describe "#announce_fail" do
+
+      after do
+        subject.announce_fail
+      end
+
+      it "plays an announcement of a first greenfields state" do
+        expect(subject.sound_player).to receive(:random_clip).with('build_fails')
+      end
+
+    end
+
     describe "#announce_breakage" do
 
       before do
@@ -151,7 +163,7 @@ module BuildLight
       end
 
       it "plays a random breakage sound" do
-        expect(subject.sound_player).to receive(:random_clip).with('build_fails')
+        expect(subject).to receive(:announce_fail)
       end
 
       it "details every broken build" do
