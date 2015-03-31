@@ -15,11 +15,8 @@ module BuildLight
     def update!
       begin
         auditor.update!
-
-        if auditor.light_needs_to_change?
-          update_light!(light_message)
-          sound_manager.make_announcement
-        end
+        update_light!(light_message) if auditor.light_needs_to_change?
+        sound_manager.make_announcement
 
       rescue StandardError => e
         update_light!('warning')

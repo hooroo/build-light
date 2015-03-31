@@ -36,8 +36,8 @@ module BuildLight
 
       context "when auditor requires no change in light" do
 
-        it "doesn't make an announcement" do
-          expect(subject.sound_manager).to_not have_received :make_announcement
+        it "still makes an announcement" do
+          expect(subject.sound_manager).to have_received :make_announcement
         end
 
         it "doesn't update the light" do

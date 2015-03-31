@@ -23,7 +23,7 @@ module BuildLight
         if file_location && File.exists?(file_location)
           collected_commands << file_location
         else #Missing MP3 file, fall back to unknown
-          collected_commands << file('announcements', 'unknown')
+          collected_commands << clip('announcements', 'unknown')
         end
       end
       make_announcements(collected_commands)
