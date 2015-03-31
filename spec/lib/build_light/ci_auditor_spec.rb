@@ -486,15 +486,15 @@ module BuildLight
 
         let(:current_activity) { 'running' }
 
-        it "returns true" do
-          expect(auditor.build_has_been_fixed?).to be true
+        it "returns false" do
+          expect(auditor.build_has_been_fixed?).to be false
         end
 
       end
 
       context "when it hastn't been fixed" do
-        let(:current_state) { 'failure`' }
-        let(:prior_state)   { 'failure`' }
+        let(:current_state) { 'failure' }
+        let(:prior_state)   { 'failure' }
 
         it "returns false" do
           expect(auditor.build_has_been_fixed?).to be false

@@ -56,7 +56,7 @@ module BuildLight
     end
 
     def build_has_been_fixed?
-      build_has_succeeded? && build_had_failed?
+      build_has_succeeded? && build_had_failed? && build_is_idle?
     end
 
     private
