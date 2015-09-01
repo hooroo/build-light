@@ -1,5 +1,3 @@
-require 'octokit'
-
 module CI
 
   module Buildkite

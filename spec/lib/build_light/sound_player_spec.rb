@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'build_light/sound_player'
 
 module BuildLight
 

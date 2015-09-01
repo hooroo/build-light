@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'net/http'
 require 'json'
 require 'open-uri'
@@ -11,7 +10,7 @@ module CI
 
       include ::Logger
 
-      attr_reader :build, :jobs, :name, :organisation, :culprits, :branch
+      attr_reader :jobs, :name, :organisation, :branch
 
       URL = 'https://api.buildkite.com/v1'
 
@@ -20,10 +19,16 @@ module CI
         @organisation   = config[:organisation]
         @branch         = config[:branch] || 'master'
         @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
-        @build          = fetch_build
         logger.info "Latest build for project '#{name}' is ##{build['number']}"
         logger.info "Build '#{name}' building?: #{running?}"
-        @culprits       = fetch_culprits
+      end
+
+      def build
+        @build ||= fetch_build
+      end
+
+      def culprits
+        @culprits ||= Culprit.new(self).to_a
       end
 
       def success?
@@ -74,14 +79,6 @@ module CI
         Job.new job_data
       end
 
-      def fetch_culprits
-        if failure?
-          [ github_author ].reject{ |x| x.nil? }
-        else
-          []
-        end
-      end
-
       def assemble_jobs
         logger.info "Assembling jobs for #{name}"
         job_list = []
@@ -93,25 +90,6 @@ module CI
 
       def valid_jobs
         build['jobs'].reject{ |job| ['waiter', 'manual'].include? job['type'] }
-      end
-
-      def github_author
-        author = github_commit_info.get_deep(:commit, :author, :name)
-        logger.info "Build break culprit: #{author}" if author
-        author
-      end
-
-      def github_commit_info
-        begin
-          octokit.commit("#{organisation}/#{name}", build['commit'])
-        rescue => e
-          logger.error "Couldn't fetch break culprits from Github"
-          {}
-        end
-      end
-
-      def octokit
-        @octokit ||= Octokit::Client.new(:netrc => true)
       end
 
       def fetch_build

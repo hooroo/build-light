@@ -1,6 +1,7 @@
 require 'pry-byebug'
 require 'awesome_print'
 require 'build_light'
+require 'build_light/ci/buildkite/ci'
 
 class Fixtures
   def self.path

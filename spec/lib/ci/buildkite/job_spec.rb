@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'build_light/ci/buildkite/job'
-
 
 module CI
 

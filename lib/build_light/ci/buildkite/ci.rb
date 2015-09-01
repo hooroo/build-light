@@ -1,3 +1,7 @@
+require "build_light/ci/buildkite/build"
+require "build_light/ci/buildkite/job"
+require "build_light/ci/buildkite/culprit"
+
 module CI
 
   module Buildkite

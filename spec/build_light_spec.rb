@@ -9,7 +9,6 @@ module BuildLight
     let(:new_config)            { nil }
     subject                     { described_class.new }
 
-
     describe "#configure" do
 
       context "when specifying overriding configuration parameters" do
@@ -33,7 +32,6 @@ module BuildLight
           expect(subject.configuration.light_manager).to eq({ name: 'LightMan(tm)' })
           expect(subject.configuration.voice_command).to eq 'say'
         end
-
       end
 
       context "when not overriding" do
@@ -48,29 +46,7 @@ module BuildLight
           expect(subject.configuration.light_manager).to eq({ name: 'squinty' })
           expect(subject.configuration.voice_command).to eq 'mpg123'
         end
-
       end
-
     end
-
-
   end
-
 end
-
-# light = BuildLight::BuildLight.new
-
-# light.configure do |config|
-#   config.status_file        = File.expand_path(File.join('..', 'last_status.json'), __FILE__)
-#   config.sound_directories  = [ File.expand_path(File.join('..', 'sounds'), __FILE__) ]
-#   config.ci                 = {
-#                                 name: 'Buildkite',
-#                                 organisation: 'hooroo',
-#                                 builds: [ 'hotels', 'flightbookings', 'flightbooking-events', 'reservations' ],
-#                                 api_token: ''
-#                               }
-#   config.light_manager      = { name: "squinty" }
-#   config.greenfields        = 3000
-# end
-
-# light.run!

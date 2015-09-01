@@ -1,3 +1,6 @@
+require "build_light/ci/jenkins/build"
+require "build_light/ci/jenkins/job"
+
 module CI
 
   module Jenkins

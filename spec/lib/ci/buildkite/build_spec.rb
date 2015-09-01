@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'build_light/ci/buildkite/build'
-require 'build_light/ci/buildkite/job'
-
 
 module CI
 
@@ -14,21 +11,6 @@ module CI
       let(:running_build)     { JSON.parse File.read("#{Fixtures.path}/buildkite/build/running_build.json") }
       let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
       subject(:build)         { described_class.new build_name: 'hotels', config: config }
-
-      before do
-        allow_any_instance_of(Octokit::Client).to receive(:commit) do
-          {
-            sha: "aabbccddee",
-            commit: {
-              author: {
-                name: "Joe Developer",
-                email: "joe@developer.com",
-                date: "2014-11-05 03:08:56 UTC"
-              }
-            }
-          }
-        end
-      end
 
       context "given any build" do
 
@@ -57,9 +39,8 @@ module CI
 
         it "names and shames the culprits" do
           expect(build.culprits.length).to eq 1
-          expect(build.culprits.first).to eq "Joe Developer"
+          expect(build.culprits.first).to eq "Michael Chapman"
         end
-
       end
 
       context "given a failed build" do
@@ -76,7 +57,6 @@ module CI
         it "it doesn't identify it as running" do
           expect(build.running?).to eq false
         end
-
       end
 
       context "given a successful build" do
@@ -97,7 +77,6 @@ module CI
         it "it doesn't identify it as running" do
           expect(build.running?).to eq false
         end
-
       end
 
       context "given a running build" do
@@ -114,11 +93,7 @@ module CI
         it "it identifies it as running" do
           expect(build.running?).to eq true
         end
-
       end
-
     end
-
   end
-
 end

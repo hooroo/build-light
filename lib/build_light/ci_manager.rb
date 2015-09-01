@@ -42,8 +42,6 @@ module BuildLight
 
     def require_ci_manager
       require "build_light/ci/#{config[:name].downcase}/ci"
-      require "build_light/ci/#{config[:name].downcase}/build"
-      require "build_light/ci/#{config[:name].downcase}/job"
     end
 
     def ci_class

@@ -7,7 +7,7 @@ module CI
       end
 
       def culprit
-        @culprit ||= (culprit_from_build || 'unknown')
+        @culprit ||= culprit_from_build
       end
 
       def to_a
@@ -19,7 +19,8 @@ module CI
       attr_reader :build
 
       def culprit_from_build
-        build.build['creator']['name']
+        return build.build['creator']['name'] if build.build['creator']
+        'unknown'
       end
     end
   end

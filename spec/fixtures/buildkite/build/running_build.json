@@ -9,6 +9,12 @@
     "branch": "master",
     "env": {
     },
+    "creator": {
+      "id": "7723cc9f-6427-4f4b-bb77-0d61731dae40",
+      "name": "Michael Chapman",
+      "email": "michaelc@hooroo.com",
+      "created_at": "2014-09-30T05:49:23.316Z"
+    },
     "jobs": [
       {
         "id": "93256e5e-b5aa-477b-8f47-e9d58bab1403",
