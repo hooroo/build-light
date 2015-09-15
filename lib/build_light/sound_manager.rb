@@ -75,12 +75,21 @@ module BuildLight
           sound_player.clip('announcements', (one_culprit?(culprits) ? "committer" : "committers") ),
           sound_player.clip('announcements', 'drumroll')
         ])
-        sound_player.play(culprits.inject([]) { | result, element | result << sound_player.clip('committers', element) })
+        sound_player.play(culprits.inject([]) { | result, culprit | result << sound_player.clip('committers', culprit_name(culprit)) })
       end
     end
 
     def culprits build
       build.culprits.any? ? build.culprits : []
+    end
+
+    def culprit_name culprit
+      return culprit_names(culprit)[0] if culprit_names(culprit)
+      culprit
+    end
+
+    def culprit_names culprit
+      config.author_mappings.detect { |key, value| value.include? culprit }
     end
 
     def one_culprit? culprits

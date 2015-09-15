@@ -19,10 +19,11 @@ module BuildLight
     let(:broken?)           { true }
     let(:fixed?)            { false }
     let(:greenfields?)      { false }
-    let(:build1)            { OpenStruct.new(name: 'build1', culprits: [ 'johnno', 'bruce' ]) }
-    let(:build2)            { OpenStruct.new(name: 'build2', culprits: []) }
+    let(:build1)            { double(name: 'build1', culprits: culprits) }
+    let(:build2)            { double(name: 'build2', culprits: []) }
+    let(:culprits)          { [ 'johnno', 'bruce' ] }
     let(:failed_builds)     { [ build1, build2 ] }
-    let(:auditor)           { OpenStruct.new(build_has_been_broken?: broken?, build_has_been_fixed?: fixed?, failed_builds: failed_builds, first_greenfields?: greenfields?) }
+    let(:auditor)           { double(build_has_been_broken?: broken?, build_has_been_fixed?: fixed?, failed_builds: failed_builds, first_greenfields?: greenfields?) }
     subject                 { described_class.new(config: config, auditor: auditor, sound_player: MockSoundPlayer.new) }
 
     describe "#make_announcement" do
@@ -46,7 +47,6 @@ module BuildLight
           expect(subject).to_not have_received :announce_fix
           expect(subject).to_not have_received :announce_check
         end
-
       end
 
       context "when build has been fixed" do
@@ -63,7 +63,6 @@ module BuildLight
           expect(subject).to_not have_received :announce_breakage
           expect(subject).to_not have_received :announce_check
         end
-
       end
 
       context "when we reach the first state of greenfields" do
@@ -81,7 +80,6 @@ module BuildLight
           expect(subject).to_not have_received :announce_breakage
           expect(subject).to_not have_received :announce_check
         end
-
       end
 
       context "when a common check takes place" do
@@ -99,9 +97,7 @@ module BuildLight
           expect(subject).to_not have_received :announce_breakage
           expect(subject).to_not have_received :announce_greenfields
         end
-
       end
-
     end
 
     describe "#announce_fix" do
@@ -113,7 +109,6 @@ module BuildLight
       it "plays an announcement of a fix" do
         expect(subject.sound_player).to receive(:random_clip).with('build_fixes')
       end
-
     end
 
     describe "#announce_greenfields" do
@@ -125,7 +120,6 @@ module BuildLight
       it "plays an announcement of a first greenfields state" do
         expect(subject.sound_player).to receive(:random_clip).with('greenfields')
       end
-
     end
 
     describe "#announce_check" do
@@ -137,7 +131,6 @@ module BuildLight
       it "plays an announcement of a first greenfields state" do
         expect(subject.sound_player).to receive(:clip).with('announcements', 'check')
       end
-
     end
 
     describe "#announce_fail" do
@@ -149,13 +142,9 @@ module BuildLight
       it "plays an announcement of a first greenfields state" do
         expect(subject.sound_player).to receive(:random_clip).with('build_fails')
       end
-
     end
 
     describe "#announce_breakage" do
-
-      before do
-      end
 
       after do
         subject.announce_breakage(sleep: false)
@@ -171,14 +160,15 @@ module BuildLight
       end
 
       it "names and shames culprits, if any" do
-        expect(subject).to receive(:announce_culprits)
-        expect(subject).to receive(:announce_culprits)
+        expect(subject).to receive(:announce_culprits).with culprits #.and_return('sarasa')
+        expect(subject).to receive(:announce_culprits).with [] #.and_return('sarasa')
       end
 
+      context 'with author mappings' do
+        before do
+          config.author_mappings = { 'john_something' => ['johnno'] }
+        end
+      end
     end
-
-
   end
-
-
 end
