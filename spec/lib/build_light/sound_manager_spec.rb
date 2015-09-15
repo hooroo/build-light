@@ -15,7 +15,7 @@ module BuildLight
 
   describe SoundManager do
 
-    let(:config)            { Configuration.new }
+    let(:config)            { Configuration.instance }
     let(:broken?)           { true }
     let(:fixed?)            { false }
     let(:greenfields?)      { false }

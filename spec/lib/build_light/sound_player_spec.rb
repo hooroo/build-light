@@ -4,7 +4,7 @@ module BuildLight
 
   describe SoundPlayer do
 
-    let(:config)            { Configuration.new }
+    let(:config)            { Configuration.instance }
     let(:file_type)         { "build_fails" }
     let(:file_name)         { "hell_naw" }
     let(:local_path)        { File.expand_path(File.join('../../../..'), __FILE__) }

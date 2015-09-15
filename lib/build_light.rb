@@ -25,12 +25,15 @@ module BuildLight
 
     attr_accessor :configuration
 
+    def initialize
+      @configuration = Configuration.instance
+    end
+
     def run!
       Processor.new( config: configuration ).update!
     end
 
     def configure
-      configuration ||= Configuration.new
       yield configuration
       @configuration = configuration
     end

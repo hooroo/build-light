@@ -2,11 +2,9 @@ require 'spec_helper'
 
 module BuildLight
 
-
   describe BuildLight do
 
-    let(:config)                { Configuration.new }
-    let(:new_config)            { nil }
+    let(:config)                { Configuration.instance }
     subject                     { described_class.new }
 
     describe "#configure" do
@@ -37,7 +35,7 @@ module BuildLight
       context "when not overriding" do
 
         before do
-          subject.configure { |config| config }
+          Configuration.reset!
         end
 
         it "returns the default configuration values" do

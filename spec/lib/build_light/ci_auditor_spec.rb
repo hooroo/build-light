@@ -4,7 +4,7 @@ module BuildLight
 
   describe CIAuditor do
 
-    let(:config)                { Configuration.new }
+    let(:config)                { Configuration.instance }
     let(:ci)                    { OpenStruct.new(result: current_state, activity: current_activity, failed_builds: failed_builds) }
     let(:failed_builds)         { ['build', 'another'] }
     let(:prior_activity)        { 'idle' }
@@ -17,6 +17,7 @@ module BuildLight
     let(:auditor)               { subject.new(config, ci: ci) }
 
     before do
+      config.greenfields = 2000
       allow_any_instance_of(subject).to receive(:prior).and_return( prior )
     end
 
@@ -29,7 +30,6 @@ module BuildLight
       it "receives a streak count" do
         expect(auditor.streak).to eq streak
       end
-
     end
 
     describe "#update!" do
@@ -47,7 +47,6 @@ module BuildLight
         it "persists the status" do
           expect(auditor).to receive :save_status!
         end
-
       end
 
       context "when build is idle" do
@@ -67,7 +66,6 @@ module BuildLight
             it "persists the prior state as current" do
               expect(auditor.new_state).to eq current_state
             end
-
           end
 
           context "and a current success" do
@@ -81,9 +79,7 @@ module BuildLight
             it "persists the new state as current" do
               expect(auditor.new_state).to eq current_state
             end
-
           end
-
         end
 
         context "with a prior success" do
@@ -102,7 +98,6 @@ module BuildLight
             it "persists the prior state as current" do
               expect(auditor.new_state).to eq current_state
             end
-
           end
 
           context "and a current failure" do
@@ -114,9 +109,7 @@ module BuildLight
             it "persists the new state as current" do
               expect(auditor.new_state).to eq current_state
             end
-
           end
-
         end
 
         context "and a new build starts" do
@@ -131,9 +124,7 @@ module BuildLight
           it "maintains the prior state regardless of the partial result of the running build" do
             expect(auditor.new_state).to eq prior_state
           end
-
         end
-
       end
 
       context "when build is active" do
@@ -160,9 +151,7 @@ module BuildLight
             it "doesn't update the streak count" do
               expect(auditor.streak).to eq streak
             end
-
           end
-
         end
 
         context "and it finishes running" do
@@ -180,7 +169,6 @@ module BuildLight
             it "maintains the prior state" do
               expect(auditor.new_state).to eq prior_state
             end
-
           end
 
           context "and the build state has changed" do
@@ -194,14 +182,9 @@ module BuildLight
             it "persists the new state" do
               expect(auditor.new_state).to eq current_state
             end
-
           end
-
         end
-
       end
-
-
     end
 
     describe "#light_needs_to_change?" do
@@ -215,7 +198,6 @@ module BuildLight
           it "returns true" do
             expect(auditor.light_needs_to_change?).to be true
           end
-
         end
 
         context "and the state doesn't change" do
@@ -223,7 +205,6 @@ module BuildLight
           it "returns false" do
             expect(auditor.light_needs_to_change?).to be false
           end
-
         end
 
         context "and the state changes" do
@@ -233,9 +214,7 @@ module BuildLight
           it "returns true" do
             expect(auditor.light_needs_to_change?).to be true
           end
-
         end
-
       end
 
       context "when build is running" do
@@ -249,7 +228,6 @@ module BuildLight
           it "returns false" do
             expect(auditor.light_needs_to_change?).to be false
           end
-
         end
 
         context "and it's stopped running" do
@@ -261,7 +239,6 @@ module BuildLight
             it "returns true" do
               expect(auditor.light_needs_to_change?).to be true
             end
-
           end
 
           context "when the state changes in-between builds" do
@@ -271,13 +248,9 @@ module BuildLight
             it "returns true" do
               expect(auditor.light_needs_to_change?).to be true
             end
-
           end
-
         end
-
       end
-
     end
 
     describe "#greenfields?" do
@@ -291,9 +264,7 @@ module BuildLight
           it "doesn't mark the build as being in greenfields state" do
             expect(auditor.greenfields?).to be false
           end
-
         end
-
       end
 
       context "when build has succeeded" do
@@ -305,7 +276,6 @@ module BuildLight
           it "doesn't mark the build as being in greenfields state" do
             expect(auditor.greenfields?).to be false
           end
-
         end
 
         context "and the streak count is low" do
@@ -314,7 +284,6 @@ module BuildLight
           it "doesn't mark the build as being in greenfields state" do
             expect(auditor.greenfields?).to be false
           end
-
         end
 
         context "and the streak count is equal to the greenfields count" do
@@ -323,7 +292,6 @@ module BuildLight
           it "marks the build as being in greenfields state" do
             expect(auditor.greenfields?).to be true
           end
-
         end
 
         context "and the streak count is pretty damned high" do
@@ -332,11 +300,8 @@ module BuildLight
           it "marks the build as being in greenfields state" do
             expect(auditor.greenfields?).to be true
           end
-
         end
-
       end
-
     end
 
     describe "#current_state" do
@@ -347,7 +312,6 @@ module BuildLight
       it "equals the result from CI" do
         expect(auditor.current_state).to eq current_state
       end
-
     end
 
     describe "#build_is_active?" do
@@ -359,7 +323,6 @@ module BuildLight
         it "returns true" do
           expect(auditor.build_is_active?).to be true
         end
-
       end
 
       context "when ci reports build as idle" do
@@ -369,9 +332,7 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_is_active?).to be false
         end
-
       end
-
     end
 
     describe "#new_state" do
@@ -388,9 +349,7 @@ module BuildLight
           it "retains the prior state" do
             expect(auditor.new_state).to eq prior_state
           end
-
         end
-
       end
 
       context "when build is idle" do
@@ -405,11 +364,8 @@ module BuildLight
           it "retains the current state" do
             expect(auditor.new_state).to eq current_state
           end
-
         end
-
       end
-
     end
 
     describe "#failed_builds" do
@@ -417,7 +373,6 @@ module BuildLight
       it "reflects failed builds from CI" do
         expect(auditor.failed_builds).to eq failed_builds
       end
-
     end
 
     describe "#build_has_been_broken?" do
@@ -432,7 +387,6 @@ module BuildLight
         it "returns true" do
           expect(auditor.build_has_been_broken?).to be true
         end
-
       end
 
       context "when building in in-between checks" do
@@ -443,7 +397,6 @@ module BuildLight
           # we do not want a premature announcement
           expect(auditor.build_has_been_broken?).to be false
         end
-
       end
 
       context "when it hastn't been broken" do
@@ -453,7 +406,6 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_has_been_broken?).to be false
         end
-
       end
 
       context "when it was already broken" do
@@ -463,9 +415,7 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_has_been_broken?).to be false
         end
-
       end
-
     end
 
     describe "#build_has_been_fixed?" do
@@ -480,7 +430,6 @@ module BuildLight
         it "returns true" do
           expect(auditor.build_has_been_fixed?).to be true
         end
-
       end
 
       context "when building in in-between checks" do
@@ -490,7 +439,6 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_has_been_fixed?).to be false
         end
-
       end
 
       context "when it hastn't been fixed" do
@@ -500,7 +448,6 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_has_been_fixed?).to be false
         end
-
       end
 
       context "when it was already fixed" do
@@ -510,9 +457,7 @@ module BuildLight
         it "returns false" do
           expect(auditor.build_has_been_broken?).to be false
         end
-
       end
-
     end
 
     describe "#first_greenfields?" do
@@ -522,7 +467,6 @@ module BuildLight
         it "returns false" do
           expect(auditor.first_greenfields?).to be false
         end
-
       end
 
       context "with a greater-than-greenfields streak" do
@@ -532,7 +476,6 @@ module BuildLight
         it "returns false" do
           expect(auditor.first_greenfields?).to be false
         end
-
       end
 
       context "with a the exact value of greenfields" do
@@ -542,11 +485,7 @@ module BuildLight
         it "returns true" do
           expect(auditor.first_greenfields?).to be true
         end
-
       end
-
     end
-
   end
-
 end
