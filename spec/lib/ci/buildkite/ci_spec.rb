@@ -6,14 +6,22 @@ module CI
 
     describe CI do
 
-      let(:config)              { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels', 'flightbookings' ], api_token: 'abcd' } }
       let(:failed_build)        { double(success?: false, failure?: true, running?: false) }
       let(:successful_build)    { double(success?: true, failure?: false, running?: false) }
       let(:running_build)       { double(success?: false, failure?: false, running?: true) }
       let(:assembled_builds)    { [ failed_build, failed_build, successful_build, successful_build, successful_build, running_build, running_build, running_build, running_build ] }
-      subject(:ci)              { described_class.new config }
+      subject(:ci)              { described_class.new }
 
-      before { ci.stub(:assemble_builds).and_return assembled_builds }
+      before do
+        BuildLight::Configuration.instance.ci = {
+          name: 'Buildkite',
+          organisation: 'hooroo',
+          builds: [ 'hotels', 'flightbookings' ],
+          api_token: 'abcd'
+        }
+
+        ci.stub(:assemble_builds).and_return assembled_builds
+      end
 
       describe "#builds" do
         it "returns an array of build objects" do

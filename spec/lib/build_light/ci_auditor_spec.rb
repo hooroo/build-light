@@ -4,7 +4,6 @@ module BuildLight
 
   describe CIAuditor do
 
-    let(:config)                { Configuration.instance }
     let(:ci)                    { OpenStruct.new(result: current_state, activity: current_activity, failed_builds: failed_builds) }
     let(:failed_builds)         { ['build', 'another'] }
     let(:prior_activity)        { 'idle' }
@@ -14,10 +13,10 @@ module BuildLight
     let(:streak)                { 88 }
     let(:prior)                 { { 'activity' => prior_activity, 'state' => prior_state, 'streak' => streak } }
     subject                     { described_class }
-    let(:auditor)               { subject.new(config, ci: ci) }
+    let(:auditor)               { subject.new(ci: ci) }
 
     before do
-      config.greenfields = 2000
+      Configuration.instance.greenfields = 2000
       allow_any_instance_of(subject).to receive(:prior).and_return( prior )
     end
 
@@ -271,7 +270,7 @@ module BuildLight
         let(:current_state) { 'success' }
 
         context "and the streak count is right under the greenfields count" do
-          let(:streak) { (config.greenfields - 1) }
+          let(:streak) { (Configuration.instance.greenfields - 1) }
 
           it "doesn't mark the build as being in greenfields state" do
             expect(auditor.greenfields?).to be false
@@ -287,7 +286,7 @@ module BuildLight
         end
 
         context "and the streak count is equal to the greenfields count" do
-          let(:streak) { config.greenfields }
+          let(:streak) { Configuration.instance.greenfields }
 
           it "marks the build as being in greenfields state" do
             expect(auditor.greenfields?).to be true
@@ -480,7 +479,7 @@ module BuildLight
 
       context "with a the exact value of greenfields" do
 
-        let(:streak) { config.greenfields }
+        let(:streak) { Configuration.instance.greenfields }
 
         it "returns true" do
           expect(auditor.first_greenfields?).to be true

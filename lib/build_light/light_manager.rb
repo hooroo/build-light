@@ -4,12 +4,12 @@ module BuildLight
 
     include ::Logger
 
-    def self.light config
-      new(config).light
+    def self.light
+      new.light
     end
 
-    def initialize config
-      @config = config
+    def initialize
+      @config = Configuration.instance
     end
 
     def light
@@ -30,10 +30,8 @@ module BuildLight
     end
 
     def light_manager_class_name
-      klass = config[:name].split('')
+      klass = config.light_manager[:name].split('')
       klass.shift.upcase + klass.join('')
     end
-
   end
-
 end

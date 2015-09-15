@@ -4,12 +4,11 @@ module BuildLight
 
     attr_reader :light, :sound_manager, :auditor
 
-    def initialize(light_manager: nil, ci_auditor: nil, sound_manager: nil, logger: Logging, config:)
-      @config         = config
+    def initialize(light_manager: nil, ci_auditor: nil, sound_manager: nil, logger: Logging)
       @logger         = logger.logger['BuildLight']
-      @light          = light_manager  || LightManager.light(config.light_manager)
-      @auditor        = ci_auditor     || CIAuditor.new(config)
-      @sound_manager  = sound_manager  || SoundManager.new(config: config, auditor: auditor)
+      @light          = light_manager  || LightManager.light
+      @auditor        = ci_auditor     || CIAuditor.new
+      @sound_manager  = sound_manager  || SoundManager.new(auditor: auditor)
     end
 
     def update!
@@ -27,7 +26,7 @@ module BuildLight
 
     private
 
-    attr_reader :logger, :config
+    attr_reader :logger
 
     def update_light! message
       logger.info "Setting light to: #{message}"

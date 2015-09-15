@@ -45,7 +45,7 @@ module BuildLight
     end
 
     def ci_class
-      @ci_class ||= ci_class_name.new( config )
+      @ci_class ||= ci_class_name.new
     end
 
     def ci_class_name

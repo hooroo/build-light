@@ -10,15 +10,14 @@ module CI
 
       include ::Logger
 
-      attr_reader :jobs, :name, :organisation, :branch
+      attr_reader :jobs, :name
 
       URL = 'https://api.buildkite.com/v1'
 
-      def initialize(build_name:, config:)
+      def initialize(build_name:)
+        config          = BuildLight::Configuration.instance.ci
         @name           = build_name
-        @organisation   = config[:organisation]
-        @branch         = config[:branch] || 'master'
-        @api_suffix     = "organizations/#{organisation}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{branch}"
+        @api_suffix     = "organizations/#{config[:organisation]}/projects/#{name}/builds?access_token=#{config[:api_token]}&branch=#{config[:branch] || 'master'}"
         logger.info "Latest build for project '#{name}' is ##{build['number']}"
         logger.info "Build '#{name}' building?: #{running?}"
       end

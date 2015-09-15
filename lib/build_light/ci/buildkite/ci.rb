@@ -10,11 +10,10 @@ module CI
 
       include ::Logger
 
-      attr_reader :build_list, :config
+      attr_reader :build_list
 
-      def initialize config
-        @config = config
-        @build_list = config[:builds]
+      def initialize
+        @build_list = BuildLight::Configuration.instance.ci[:builds]
         logger.info "Fetching build information for: #{build_list.join(', ')}"
         # logger.info "Successful builds: #{successful_builds.length} Failed builds: #{failed_builds.length}"
       end
@@ -24,7 +23,7 @@ module CI
       end
 
       def single_build build_name
-        Build.new(build_name: build_name, config: config)
+        Build.new(build_name: build_name)
       end
 
       def successful_builds

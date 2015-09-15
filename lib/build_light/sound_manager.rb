@@ -6,11 +6,11 @@ module BuildLight
 
     attr_reader :sound_player
 
-    def initialize config: config, auditor: auditor, sound_player: nil
-      @config           = config
+    def initialize auditor: auditor, sound_player: nil
+      @config           = Configuration.instance
       @auditor          = auditor
       @failed_builds    = auditor.failed_builds
-      @sound_player     = sound_player || SoundPlayer.new(config)
+      @sound_player     = sound_player || SoundPlayer.new
     end
 
     def make_announcement

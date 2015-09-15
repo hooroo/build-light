@@ -4,9 +4,9 @@ module BuildLight
 
     attr_reader :commands
 
-    def initialize config
+    def initialize
       @logger = Logging.logger['SoundPlayer']
-      @config = config
+      @config = Configuration.instance
     end
 
     def clip type, command

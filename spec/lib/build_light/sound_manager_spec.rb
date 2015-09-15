@@ -15,7 +15,6 @@ module BuildLight
 
   describe SoundManager do
 
-    let(:config)            { Configuration.instance }
     let(:broken?)           { true }
     let(:fixed?)            { false }
     let(:greenfields?)      { false }
@@ -24,7 +23,7 @@ module BuildLight
     let(:culprits)          { [ 'johnno', 'bruce' ] }
     let(:failed_builds)     { [ build1, build2 ] }
     let(:auditor)           { double(build_has_been_broken?: broken?, build_has_been_fixed?: fixed?, failed_builds: failed_builds, first_greenfields?: greenfields?) }
-    subject                 { described_class.new(config: config, auditor: auditor, sound_player: MockSoundPlayer.new) }
+    subject                 { described_class.new(auditor: auditor, sound_player: MockSoundPlayer.new) }
 
     describe "#make_announcement" do
 
@@ -164,11 +163,11 @@ module BuildLight
         expect(subject).to receive(:announce_culprits).with [] #.and_return('sarasa')
       end
 
-      context 'with author mappings' do
-        before do
-          config.author_mappings = { 'john_something' => ['johnno'] }
-        end
-      end
+      # context 'with author mappings' do
+      #   before do
+      #     Configuration.instance.author_mappings = { 'john_something' => ['johnno'] }
+      #   end
+      # end
     end
   end
 end

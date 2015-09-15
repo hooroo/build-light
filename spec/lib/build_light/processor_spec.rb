@@ -4,11 +4,10 @@ module BuildLight
 
   describe Processor do
 
-    let(:config)                  { Configuration.instance }
     let(:light_needs_to_change?)  { false }
     let(:auditor)                 { OpenStruct.new( :new => true, :update! => true, :light_needs_to_change? => light_needs_to_change? ) }
     let(:sound_manager)           { OpenStruct.new( :failed_builds => [], :make_announcement => true ) }
-    subject(:processor)           { described_class.new(config: config, ci_auditor: auditor, sound_manager: sound_manager) }
+    subject(:processor)           { described_class.new(ci_auditor: auditor, sound_manager: sound_manager) }
 
     describe "#new" do
       it "receives an instance of the light manager" do

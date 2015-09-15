@@ -30,7 +30,7 @@ module BuildLight
     end
 
     def run!
-      Processor.new( config: configuration ).update!
+      Processor.new.update!
     end
 
     def configure

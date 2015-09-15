@@ -9,7 +9,8 @@ module BuildLight
 
     attr_reader :greenfields, :streak, :new_state
 
-    def initialize config, ci: nil
+    def initialize ci: nil
+      @config         = Configuration.instance
       @persistor      = config.status_file
       @ci             = ci || CIManager.new(config.ci)
       @greenfields    = config.greenfields
@@ -61,7 +62,7 @@ module BuildLight
 
     private
 
-    attr_reader :persistor, :ci, :prior
+    attr_reader :persistor, :ci, :prior, :config
 
     def state_has_changed?
       build_has_been_broken? || build_has_been_fixed?

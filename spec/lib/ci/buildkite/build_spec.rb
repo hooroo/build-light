@@ -9,12 +9,12 @@ module CI
       let(:failed_build)      { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
       let(:successful_build)  { JSON.parse File.read("#{Fixtures.path}/buildkite/build/successful_build.json") }
       let(:running_build)     { JSON.parse File.read("#{Fixtures.path}/buildkite/build/running_build.json") }
-      let(:config)            { { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' } }
-      subject(:build)         { described_class.new build_name: 'hotels', config: config }
+      subject(:build)         { described_class.new build_name: 'hotels' }
 
       context "given any build" do
 
         before do
+          BuildLight::Configuration.instance.ci = { name: 'Buildkite', organisation: 'hooroo', builds: [ 'hotels' ], api_token: 'abcd' }
           allow_any_instance_of(described_class).to receive(:api_request) { failed_build }
         end
 
