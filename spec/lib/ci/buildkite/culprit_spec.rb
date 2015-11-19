@@ -6,11 +6,12 @@ module CI
 
     describe Culprit do
 
-      let(:failed_build)            { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
-      let(:authorless_failed_build) { failed_build.tap{ |first_level| first_level[0].tap { |second_level| second_level.delete('creator') } } }
-      let(:build_data)              { failed_build.first }
-      let(:build)                   { double('build', build: build_data) }
-      subject                       { described_class.new(build) }
+      let(:failed_build)              { JSON.parse File.read("#{Fixtures.path}/buildkite/build/failed_build.json") }
+      let(:authorless_failed_build)   { failed_build.tap{ |first_level| first_level[0].tap { |second_level| second_level['creator'] = nil } } }
+      let(:metadataless_failed_build) { authorless_failed_build.tap{ |first_level| first_level[0].tap { |second_level| second_level['meta_data'] = nil } } }
+      let(:build_data)                { failed_build.first }
+      let(:build)                     { double('build', build: build_data) }
+      subject                         { described_class.new(build) }
 
       describe '#culprit' do
 
@@ -21,11 +22,20 @@ module CI
         end
 
         context 'when a culprit is _not_ returned from buildkite' do
-
           let(:build_data) { authorless_failed_build.first }
 
-          it 'falls back to unknown' do
-            expect(subject.culprit).to eq 'unknown'
+          context 'but a commit message is' do
+            it 'tries to extract the author from the commit message' do
+              expect(subject.culprit).to eq 'Tom Elkin'
+            end
+          end
+
+          context 'but a commit message is not' do
+          let(:build_data) { metadataless_failed_build.first }
+            it 'falls back to unknown' do
+              # binding.pry
+              expect(subject.culprit).to eq 'unknown'
+            end
           end
         end
 

@@ -15,6 +15,10 @@
       "email": "michaelc@hooroo.com",
       "created_at": "2014-09-30T05:49:23.316Z"
     },
+    "meta_data": {
+      "buildkite:git:branch": "* (detached from e8383ae) master",
+      "buildkite:git:commit": "commit e8383ae78ae3d686bc41dd833daa59a94a2ee6b9 Author: Tom Elkin <tom.elkin@gmail.com> AuthorDate: Thu Nov 19 13:51:58 2015 +1100 Commit: Tom Elkin <tom.elkin@gmail.com> CommitDate: Thu Nov 19 13:51:58 2015 +1100 [hooroo/transact#240] New, friendlier payment / fraud error message :pear: Michael"
+    },
     "jobs": [
       {
         "id": "599f54f4-2924-4c73-9abd-aa81d30ea705",
@@ -509,9 +513,7 @@
     "created_at": "2014-11-05 03:09:25 UTC",
     "scheduled_at": "2014-11-05 03:09:25 UTC",
     "started_at": "2014-11-05 03:09:31 UTC",
-    "finished_at": "2014-11-05 03:22:30 UTC",
-    "meta_data": {
-    }
+    "finished_at": "2014-11-05 03:22:30 UTC"
   },
   {
     "id": "205b6df2-8e88-453c-8c5d-8ae99d61dcc4",
