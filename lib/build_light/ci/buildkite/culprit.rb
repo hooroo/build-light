@@ -26,7 +26,7 @@ module CI
 
       def cuprit_from_commit_message
         match = AUTHOR_FROM_COMMIT_MESSAGE_REGEX.match(commit_message)
-        match ? match[1] : nil
+        match ? match[1].strip : nil
       end
 
       def commit_message

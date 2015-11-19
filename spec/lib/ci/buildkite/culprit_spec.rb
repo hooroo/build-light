@@ -33,7 +33,6 @@ module CI
           context 'but a commit message is not' do
           let(:build_data) { metadataless_failed_build.first }
             it 'falls back to unknown' do
-              # binding.pry
               expect(subject.culprit).to eq 'unknown'
             end
           end
