@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = BuildLight::VERSION
 
-  gem.add_dependency "json", "~> 1.6.5"
+  gem.add_dependency "json", ">= 1.6.5", "< 2.4.0"
   gem.add_dependency "logging", "~> 1.8.2"
   gem.add_dependency "netrc", "~> 0.8.0"
 
